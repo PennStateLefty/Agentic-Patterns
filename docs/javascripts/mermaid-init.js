@@ -29,6 +29,7 @@ async function renderMermaidBlocks() {
       const { svg } = await mermaid.render(id, source);
       target.innerHTML = svg;
       block.replaceWith(target);
+      window.decorateZoomableSvgs?.();
     } catch (error) {
       console.error("Mermaid render failed for one diagram:", error);
     } finally {
@@ -50,4 +51,3 @@ if (document.readyState === "loading") {
 } else {
   runMermaidRender();
 }
-
