@@ -48,6 +48,12 @@ async function renderMermaidBlocks() {
   }
 }
 
-document$.subscribe(() => {
-  renderMermaidBlocks();
-});
+const runMermaidRender = () => {
+  void renderMermaidBlocks();
+};
+
+if (typeof document$ !== "undefined" && typeof document$.subscribe === "function") {
+  document$.subscribe(runMermaidRender);
+}
+
+runMermaidRender();
