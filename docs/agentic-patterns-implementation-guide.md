@@ -60,10 +60,10 @@ A capability can be both **Native** and **Preview**.
 - D2 component diagrams show runtime, state, integration, and responsibility boundaries.
 - Logical D2 diagrams use functional colors for agents, control, state, integration, and operations; they intentionally do not assign implementation ownership.
 - In profile component diagrams:
-  - Blue indicates Native
-  - Green indicates Platform-adjacent
-  - Yellow indicates Custom
-  - Pink dashed boundaries indicate Preview
+    - Blue indicates Native
+    - Green indicates Platform-adjacent
+    - Yellow indicates Custom
+    - Pink dashed boundaries indicate Preview
 
 ## State is not one thing
 
