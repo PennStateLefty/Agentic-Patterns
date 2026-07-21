@@ -8,19 +8,29 @@ async function renderMermaidBlocks() {
     securityLevel: "loose"
   });
 
-  const blocks = document.querySelectorAll("pre.mermaid-source");
+  const blocks = [...document.querySelectorAll("pre > code")];
   let index = 0;
+  const mermaidPrefix =
+    /^(flowchart|graph|sequenceDiagram|classDiagram|stateDiagram(?:-v2)?|erDiagram|journey|gantt|pie|mindmap|timeline|gitGraph|quadrantChart|xychart-beta|sankey-beta|requirementDiagram|block-beta)\b/;
 
-  for (const block of blocks) {
-    if (block.dataset.mermaidRendered === "true") {
+  for (const code of blocks) {
+    const block = code.parentElement;
+    if (!block || block.dataset.mermaidRendered === "true") {
       continue;
     }
 
-    const code = block.querySelector("code");
-    const source = (code ? code.textContent : block.textContent || "").trim();
+    const source = (code.textContent || "").trim();
     if (!source) {
       continue;
     }
+    if (!mermaidPrefix.test(source)) {
+      continue;
+    }
+
+    const wrapper =
+      block.parentElement && block.parentElement.classList.contains("highlight")
+        ? block.parentElement
+        : block;
 
     const target = document.createElement("div");
     target.className = "mermaid";
@@ -29,11 +39,11 @@ async function renderMermaidBlocks() {
     try {
       const { svg } = await mermaid.render(id, source);
       target.innerHTML = svg;
-      block.replaceWith(target);
+      wrapper.replaceWith(target);
     } catch (error) {
       console.error("Mermaid render failed for one diagram:", error);
     } finally {
-      block.dataset.mermaidRendered = "true";
+      wrapper.dataset.mermaidRendered = "true";
     }
   }
 }
