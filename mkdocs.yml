@@ -7,4 +7,3 @@ site_dir: site
 nav:
   - Architecture Position: agentic-patterns-architecture-position.md
   - Implementation Guide: agentic-patterns-implementation-guide.md
-  - Pattern Notes: ai-agent-orchestration-patterns.md
