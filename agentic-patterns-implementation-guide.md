@@ -167,15 +167,15 @@ Durable runtimes preserve execution; they do not supply agent planning or the bu
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 A Router classifies a request and dispatches it to the specialist, workflow, model, or capability best suited to handle it. It normally makes an entry or per-request selection rather than transferring active ownership repeatedly during a conversation.
 
-## Professional-services scenario
+### Professional-services scenario
 
 A central associate-assistance agent determines whether a request concerns IT, benefits, travel, expenses, procurement, or firm policy and invokes the appropriate domain capability.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -198,11 +198,11 @@ sequenceDiagram
     end
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/router-dispatcher/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                 | Architecture decision                                                                              |
 | ----------------------- | -------------------------------------------------------------------------------------------------- |
@@ -215,7 +215,7 @@ sequenceDiagram
 | **Long-term memory**    | Optional; may improve personalization but must not determine authorization                         |
 | **Route audit**         | Production baseline for consequential or regulated routing                                         |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                               | Requirement     | Why                                                                                                               |
 | ---------------------------------------- | --------------- | ----------------------------------------------------------------------------------------------------------------- |
@@ -233,7 +233,7 @@ sequenceDiagram
 | Shared conversation                      | **Not typical** | A router selects a destination; it does not convene a discussion                                                  |
 | Task ledger                              | **Not typical** | The router does not normally manage a multi-step plan                                                             |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct Router contains:
 
@@ -247,7 +247,7 @@ The smallest correct Router contains:
 
 The minimum implementation can be sessionless and synchronous.
 
-## Production additions
+### Production additions
 
 * Authenticated application session mapped to any provider continuation ID
 * Tenant-aware capability filtering
@@ -259,7 +259,7 @@ The minimum implementation can be sessionless and synchronous.
 * Idempotency when dispatch causes side effects
 * Human escalation for consequential routing
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/router-dispatcher/low-code.svg)
 
@@ -279,7 +279,7 @@ The minimum implementation can be sessionless and synchronous.
 
 Copilot Studio is a strong native fit for Router. Do not call parent-to-connected-agent invocation a decentralized Handoff unless active conversational ownership actually transfers.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/router-dispatcher/managed-pro-code.svg)
 
@@ -298,7 +298,7 @@ Copilot Studio is a strong native fit for Router. Do not call parent-to-connecte
 
 Agent Framework implements the Router. Foundry operates the endpoint and Hosted runtime. Foundry does not supply the application capability taxonomy or route policy.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/router-dispatcher/custom-code-first.svg)
 
@@ -346,17 +346,17 @@ Agent Framework implements the Router. Foundry operates the endpoint and Hosted 
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 A planner decomposes a long-horizon goal into tasks, executors perform bounded work, progress is evaluated, and the plan changes when observations, failures, dependencies, or external conditions change.
 
 Magentic is a specialized adaptive planner and supervisor implementation in this family.
 
-## Professional-services scenario
+### Professional-services scenario
 
 An associate relocating to another country requests end-to-end assistance. The system creates and maintains a plan across immigration, travel, payroll, tax, benefits, equipment, and local onboarding; tracks completed actions; and replans when the start date or visa status changes.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -388,11 +388,11 @@ sequenceDiagram
     P-->>U: Outcome and status
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/plan-and-execute/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                    | Architecture decision                                                          |
 | -------------------------- | ------------------------------------------------------------------------------ |
@@ -421,7 +421,7 @@ sequenceDiagram
 | Governance         | Agent/user IDs, security label, and retention class                     |
 | Cost               | Provider, model, deployment, token categories, and estimated charge     |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                | Requirement             | Why                                                                             |
 | ------------------------- | ----------------------- | ------------------------------------------------------------------------------- |
@@ -442,7 +442,7 @@ sequenceDiagram
 | Human intervention        | **Conditional**         | Required for consequential approvals, missing information, or policy exceptions |
 | Long-term memory          | **Optional**            | Can improve personalization or procedural reuse                                 |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct Plan-and-Execute implementation contains:
 
@@ -456,7 +456,7 @@ The smallest correct Plan-and-Execute implementation contains:
 
 This minimum can run within one process. It is not production-durable.
 
-## Production additions
+### Production additions
 
 * External authoritative task ledger
 * Durable orchestration or checkpoint recovery
@@ -471,7 +471,7 @@ This minimum can run within one process. It is not production-durable.
 * Plan, task, worker, tool, and cost traces
 * Versioned planner, worker registry, policy, and evaluation rubric
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/plan-and-execute/low-code.svg)
 
@@ -492,7 +492,7 @@ This minimum can run within one process. It is not production-durable.
 
 Copilot Studio supplies the experience, specialists, and deterministic automation. The application must define the planner, task-ledger schema, replan policy, long-running correlation, and recovery behavior.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/plan-and-execute/managed-pro-code.svg)
 
@@ -513,7 +513,7 @@ Copilot Studio supplies the experience, specialists, and deterministic automatio
 
 Agent Framework supplies planning behavior; Foundry supplies managed hosting. Neither Foundry conversation state, managed memory, nor Hosted session files replace the operational task ledger or durable workflow runtime.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/plan-and-execute/custom-code-first.svg)
 
@@ -574,15 +574,15 @@ Agent Framework supplies planning behavior; Foundry supplies managed hosting. Ne
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 A Sequential Pipeline moves work through a predetermined series of stages. Each stage consumes a bounded, validated output from the preceding stage; ordered stage contracts, rather than dynamic routing or lifecycle branching, define the pattern.
 
-## Professional-services scenario
+### Professional-services scenario
 
 An associate describes an ambiguous travel-expense situation in free text. One specialist identifies the relevant facts and missing evidence, a second reconciles travel and expense policy, a third develops context-sensitive guidance, and a final stage converts the result into associate instructions and a case note. If these roles do not require distinct reasoning, ownership, or reuse, implement the same path as a deterministic workflow or single agent instead.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -607,11 +607,11 @@ sequenceDiagram
     end
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/sequential-pipeline/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                                 | Scope and boundary                                            | Lifetime / durability                                       |
 | -------------------------------- | ------------------------------------- | ------------------------------------------------------------- | ----------------------------------------------------------- |
@@ -626,7 +626,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store              | Instructions, evidence, and case-note versions                | Conditional; business retention period                      |
 | **Telemetry**                    | Observability platform                | Stage latency, model/tool use, failures, and correlation      | Operational retention; not business truth                   |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                  | Requirement     | Why                                                                         |
 | --------------------------- | --------------- | --------------------------------------------------------------------------- |
@@ -652,7 +652,7 @@ sequenceDiagram
 | Completion policy           | **Required**    | Defines successful final stage and terminal failure                         |
 | Hard limits                 | **Conditional** | Required when stages can retry, loop locally, or consume variable resources |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -664,7 +664,7 @@ The smallest correct implementation contains:
 
 It can run synchronously in one process and keep stage outputs in memory. It does not need a task ledger, distributed queue, or durable checkpoint runtime.
 
-## Production additions
+### Production additions
 
 * Externalize large or regulated stage outputs and pin artifact versions.
 * Persist current stage, attempts, waits, and correlation when execution can outlive one request.
@@ -676,7 +676,7 @@ It can run synchronously in one process and keep stage outputs in memory. It doe
 * Trace end-to-end stage causality, latency, tokens, cost, and failure class.
 * Add authenticated approval and escalation paths where policy requires them.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/sequential-pipeline/low-code.svg)
 
@@ -697,7 +697,7 @@ It can run synchronously in one process and keep stage outputs in memory. It doe
 
 Copilot Studio natively supports fixed topic and agent-flow sequences, and generative orchestration calls selected capabilities sequentially. Dataverse or another workflow service owns recoverable stage state when the pipeline cannot remain inside one bounded invocation.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/sequential-pipeline/managed-pro-code.svg)
 
@@ -718,7 +718,7 @@ Copilot Studio natively supports fixed topic and agent-flow sequences, and gener
 
 Agent Framework implements the ordered pipeline; GA Foundry Hosted agents provide managed hosting. Verify language-specific Agent Framework hosting package maturity. Foundry conversation state does not replace workflow checkpoints, stage records, or artifacts. Durable distributed execution, when needed, remains a separate adjacent capability.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/sequential-pipeline/custom-code-first.svg)
 
@@ -757,7 +757,7 @@ Agent Framework implements the ordered pipeline; GA Foundry Hosted agents provid
 * Passing full conversation history between stages weakens isolation and hides the real stage contract.
 * Workflow history and checkpoints must not be presented as a business task ledger.
 
-## Official references
+### Official references
 
 * [Agent Framework orchestration patterns](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/)
 * [Agent Framework workflow state](https://learn.microsoft.com/en-us/agent-framework/workflows/state)
@@ -774,15 +774,15 @@ Agent Framework implements the ordered pipeline; GA Foundry Hosted agents provid
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 Parallel Fan-Out/Fan-In starts independent branches without waiting for sibling branches, isolates their working context, and applies an explicit barrier and aggregation policy. Concurrency without a defined merge, quorum, or partial-result policy is not a complete implementation of the pattern.
 
-## Professional-services scenario
+### Professional-services scenario
 
 Before an international assignment, travel, immigration, security, tax, and expense specialists independently identify associate obligations. An aggregator produces one prioritized readiness checklist.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -811,11 +811,11 @@ sequenceDiagram
     end
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/parallel-fan-out/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                                                    | Scope and boundary                                                | Lifetime / durability                                               |
 | -------------------------------- | -------------------------------------------------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------- |
@@ -830,7 +830,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store                                 | Branch evidence and aggregated checklist                          | Conditional; business retention period                              |
 | **Telemetry**                    | Observability platform                                   | Per-branch causality, latency, usage, stragglers, and aggregation | Operational retention; not result truth                             |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                  | Requirement     | Why                                                                    |
 | --------------------------- | --------------- | ---------------------------------------------------------------------- |
@@ -856,7 +856,7 @@ sequenceDiagram
 | Completion policy           | **Required**    | Defines all, quorum, partial, timeout, or fail-fast behavior           |
 | Hard limits                 | **Conditional** | Bounds branch count, concurrency, latency, tokens, and cost            |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -869,7 +869,7 @@ The smallest correct implementation contains:
 
 It can run in one process with an in-memory result collection. A sequential loop over workers does not satisfy the defining capability.
 
-## Production additions
+### Production additions
 
 * Bound fan-out width and apply downstream backpressure and per-tenant fairness.
 * Assign branch and correlation IDs and propagate them through tools, stores, and traces.
@@ -881,7 +881,7 @@ It can run in one process with an in-memory result collection. A sequential loop
 * Version aggregation, ranking, tie-break, and conflict policies.
 * Monitor peak concurrency, model quotas, latency distribution, cost, and partial-result rates.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/parallel-fan-out/low-code.svg)
 
@@ -902,7 +902,7 @@ It can run in one process with an in-memory result collection. A sequential loop
 
 Copilot Studio supplies the experience and worker capabilities. True concurrency is flow-composed or external; native generative orchestration remains sequential. The flow and application own the barrier, aggregation, backpressure, and partial-failure policy.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/parallel-fan-out/managed-pro-code.svg)
 
@@ -923,7 +923,7 @@ Copilot Studio supplies the experience and worker capabilities. True concurrency
 
 Agent Framework implements concurrent scheduling and aggregation; GA Foundry Hosted agents supply managed execution. Verify language-specific Agent Framework hosting package maturity. Use a separate durable runtime or queue only when the work crosses process or time boundaries. Foundry conversation state is not branch state or an aggregation ledger.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/parallel-fan-out/custom-code-first.svg)
 
@@ -963,7 +963,7 @@ Agent Framework implements concurrent scheduling and aggregation; GA Foundry Hos
 * Event Grid announces changes; it is not a command queue or aggregation barrier.
 * Durable orchestration history is execution evidence, not a business task ledger.
 
-## Official references
+### Official references
 
 * [Agent Framework orchestration patterns](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/)
 * [Agent Framework checkpoints](https://learn.microsoft.com/en-us/agent-framework/workflows/checkpoints)
@@ -980,15 +980,15 @@ Agent Framework implements concurrent scheduling and aggregation; GA Foundry Hos
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 A Supervisor retains the active conversation and accountability for the final result, dynamically selects specialists, delegates bounded assignments, receives their results, resolves gaps or conflicts, and synthesizes one response. Fixed fan-out alone is not supervision, and adaptive task-ledger planning is a separate specialization.
 
-## Professional-services scenario
+### Professional-services scenario
 
 An associate planning parental leave asks one assistant for an action plan. The supervisor consults benefits, staffing, time-entry, travel, and policy specialists, then produces one sequenced plan while retaining the conversation.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -1014,11 +1014,11 @@ sequenceDiagram
     end
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/supervisor/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                              | Scope and boundary                                                  | Lifetime / durability                                           |
 | -------------------------------- | ---------------------------------- | ------------------------------------------------------------------- | --------------------------------------------------------------- |
@@ -1033,7 +1033,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store           | Evidence and final sequenced plan                                   | Conditional; business retention period                          |
 | **Telemetry**                    | Observability platform             | Delegation, worker, tool, synthesis, latency, and cost traces       | Operational retention                                           |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                                 | Requirement     | Why                                                                  |
 | ------------------------------------------ | --------------- | -------------------------------------------------------------------- |
@@ -1059,7 +1059,7 @@ sequenceDiagram
 | Completion policy                          | **Required**    | Defines sufficient coverage, success, and escalation                 |
 | Hard limits                                | **Conditional** | Bounds worker calls, rounds, latency, tokens, and cost               |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -1072,7 +1072,7 @@ The smallest correct implementation contains:
 
 It can execute synchronously without a durable ledger. If the split and worker set are fixed and no dynamic manager decision is needed, Parallel or Sequential is simpler.
 
-## Production additions
+### Production additions
 
 * Tenant-aware worker registry, availability checks, and least-privilege filtering.
 * Durable delegation records with assignment, attempt, owner, deadline, result version, and correlation.
@@ -1084,7 +1084,7 @@ It can execute synchronously without a durable ledger. If the split and worker s
 * Checkpoint recovery or ledger-driven reconstruction for interrupted supervision.
 * End-to-end traces for supervisor decisions, worker calls, tool effects, costs, and final provenance.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/supervisor/low-code.svg)
 
@@ -1105,7 +1105,7 @@ It can execute synchronously without a durable ledger. If the split and worker s
 
 Copilot Studio is a native fit for bounded parent delegation. Child and connected agents are workers, not decentralized peers: the parent remains responsible for synthesis. Dataverse and flows become necessary when assignments are asynchronous, durable, or operationally complex.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/supervisor/managed-pro-code.svg)
 
@@ -1126,7 +1126,7 @@ Copilot Studio is a native fit for bounded parent delegation. Child and connecte
 
 Agent Framework implements supervision and bounded delegation; GA Foundry Hosted agents supply managed hosting. Verify language-specific Agent Framework hosting package maturity. Application policy still defines the worker registry, delegation schema, conflict handling, and completion. Foundry conversation state is not the delegation ledger.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/supervisor/custom-code-first.svg)
 
@@ -1165,7 +1165,7 @@ Agent Framework implements supervision and bounded delegation; GA Foundry Hosted
 * Do not expose the full supervisor transcript or credentials to every worker.
 * Generic Supervisor behavior is composed over Agent Framework primitives; do not imply every SDK surface is a named packaged orchestration.
 
-## Official references
+### Official references
 
 * [Agent Framework orchestration patterns](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/)
 * [Agent Framework tools overview](https://learn.microsoft.com/en-us/agent-framework/agents/tools/)
@@ -1182,15 +1182,15 @@ Agent Framework implements supervision and bounded delegation; GA Foundry Hosted
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 Handoff transfers the active interaction owner from one specialist to another while preserving only the context required to continue. Exactly one active owner is authoritative at a time; routing at entry or parent-supervised delegation that returns to the caller does not by itself implement decentralized handoff.
 
-## Professional-services scenario
+### Professional-services scenario
 
 An associate reports a laptop access issue. IT begins diagnosis, transfers control to identity security when suspicious sign-in activity is found, and receives the case back after the identity issue is remediated.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -1214,11 +1214,11 @@ sequenceDiagram
     I-->>U: Complete resolution
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/handoff/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                                                       | Scope and boundary                                                                  | Lifetime / durability                                                           |
 | -------------------------------- | ----------------------------------------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------------------------------------------- |
@@ -1233,7 +1233,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store                                    | Optional diagnostic evidence and remediation records                                | Optional; business retention period                                             |
 | **Telemetry**                    | Observability platform                                      | Transfer offers, acceptance, owner changes, hops, and tool effects                  | Operational retention; transfer audit may require business retention separately |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                   | Requirement     | Why                                                                          |
 | ---------------------------- | --------------- | ---------------------------------------------------------------------------- |
@@ -1259,7 +1259,7 @@ sequenceDiagram
 | Completion policy            | **Required**    | Defines resolved, returned, escalated, abandoned, and failed states          |
 | Hard limits                  | **Required**    | Hop, revisit, time, token, and cost bounds prevent transfer loops            |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -1273,7 +1273,7 @@ The smallest correct implementation contains:
 
 It can run synchronously in one process. A parent calling a specialist and automatically receiving control back remains bounded delegation, not Handoff.
 
-## Production additions
+### Production additions
 
 * Authorized session-to-user and tenant mapping independent of provider continuation IDs.
 * Durable current-owner record with compare-and-set concurrency and transfer audit.
@@ -1285,7 +1285,7 @@ It can run synchronously in one process. A parent calling a specialist and autom
 * Dead-peer detection, fallback owner, and operational takeover.
 * Traces correlating message, owner version, transfer, tools, and business case.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/handoff/low-code.svg)
 
@@ -1306,7 +1306,7 @@ It can run synchronously in one process. A parent calling a specialist and autom
 
 Copilot Studio is a partial fit. Connected-agent calls normally return to the parent and should be classified as Router or Supervisor behavior. A true peer ownership chain requires external channel/endpoint coordination and an authoritative owner record; native human handoff remains a distinct capability.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/handoff/managed-pro-code.svg)
 
@@ -1327,7 +1327,7 @@ Copilot Studio is a partial fit. Connected-agent calls normally return to the pa
 
 Agent Framework supplies contextual peer handoff; GA Foundry Hosted agents supply managed hosting. Verify language-specific Agent Framework hosting package maturity. The application still owns transfer authorization, current-owner durability, loop prevention, and audit. Foundry conversations continue messages but are not the owner record.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/handoff/custom-code-first.svg)
 
@@ -1367,7 +1367,7 @@ Agent Framework supplies contextual peer handoff; GA Foundry Hosted agents suppl
 * Transfer the minimum necessary context; a full transcript can violate domain boundaries.
 * A current-owner record is shared working state, not a task ledger or long-term memory.
 
-## Official references
+### Official references
 
 * [Agent Framework orchestration patterns](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/)
 * [Agent Framework agent sessions](https://learn.microsoft.com/en-us/agent-framework/agents/conversations/session)
@@ -1384,15 +1384,15 @@ Agent Framework supplies contextual peer handoff; GA Foundry Hosted agents suppl
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 Group Chat lets several participants inspect and respond to a common conversation while an explicit manager or protocol selects speakers, resolves conflict, determines convergence, and terminates the discussion. Shared history alone is insufficient without turn and completion control.
 
-## Professional-services scenario
+### Professional-services scenario
 
 Policy, employee-relations, accessibility, and associate-advocate agents deliberate over a workplace-accommodation request to identify policy constraints, employee needs, unresolved questions, and an escalation recommendation.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -1420,11 +1420,11 @@ sequenceDiagram
     M-->>U: Synthesis, open questions, and escalation
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/group-chat/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                                       | Scope and boundary                                                   | Lifetime / durability                                            |
 | -------------------------------- | ------------------------------------------- | -------------------------------------------------------------------- | ---------------------------------------------------------------- |
@@ -1439,7 +1439,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store                    | Evidence and final recommendation versions                           | Conditional; business retention period                           |
 | **Telemetry**                    | Observability platform                      | Speaker selection, rounds, token growth, conflict, and cost          | Operational retention                                            |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                  | Requirement     | Why                                                                            |
 | --------------------------- | --------------- | ------------------------------------------------------------------------------ |
@@ -1465,7 +1465,7 @@ sequenceDiagram
 | Completion policy           | **Required**    | Defines consensus, sufficient coverage, escalation, or terminal failure        |
 | Hard limits                 | **Required**    | Bounds rounds, speakers, tokens, time, and cost                                |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -1479,7 +1479,7 @@ The smallest correct implementation contains:
 
 It can run synchronously and keep history in memory. Independent generations merged once are Parallel, not Group Chat.
 
-## Production additions
+### Production additions
 
 * Authorized participant registry and field-level context filtering.
 * Append-only contribution IDs, versions, and optimistic concurrency.
@@ -1492,7 +1492,7 @@ It can run synchronously and keep history in memory. Independent generations mer
 * Human review for consequential recommendations and unresolved conflicts.
 * Trace every speaker decision, visible-context version, contribution, tool, and synthesis source.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/group-chat/low-code.svg)
 
@@ -1513,7 +1513,7 @@ It can run synchronously and keep history in memory. Independent generations mer
 
 Copilot Studio can host the participant experiences but has no first-class Group Chat runtime. External code or workflow composition must own shared history, speaker selection, conflict resolution, synthesis, and termination. A parent invoking connected agents sequentially without shared peer-visible history remains Supervisor behavior.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/group-chat/managed-pro-code.svg)
 
@@ -1534,7 +1534,7 @@ Copilot Studio can host the participant experiences but has no first-class Group
 
 Agent Framework implements Group Chat and GA Foundry Hosted agents supply managed execution. Verify language-specific Agent Framework hosting package maturity. The application owns participant eligibility, shared-context policy, conflict resolution, and stop conditions. Foundry conversation state and managed memory do not replace structured decisions or durable round state.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/group-chat/custom-code-first.svg)
 
@@ -1574,7 +1574,7 @@ Agent Framework implements Group Chat and GA Foundry Hosted agents supply manage
 * Do not expose sensitive evidence to every participant merely because the transcript is shared.
 * Copilot Studio has no first-class shared-thread speaker and termination manager.
 
-## Official references
+### Official references
 
 * [Agent Framework orchestration patterns](https://learn.microsoft.com/en-us/agent-framework/workflows/orchestrations/)
 * [Agent Framework workflow state](https://learn.microsoft.com/en-us/agent-framework/workflows/state)
@@ -1591,15 +1591,15 @@ Agent Framework implements Group Chat and GA Foundry Hosted agents supply manage
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 Evaluator-Optimizer repeatedly produces a versioned candidate, evaluates that exact version against an externalized rubric, returns actionable feedback, and revises until approval, escalation, or a hard limit. Generic quality measurement without a runtime revision path is not this pattern.
 
-## Professional-services scenario
+### Professional-services scenario
 
 An agent drafts an expense-policy exception request. A policy evaluator checks required evidence, allowable grounds, tone, and routing information. The drafting agent revises until the request is complete or escalates missing evidence to the associate.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -1630,11 +1630,11 @@ sequenceDiagram
     C-->>U: Approved version or transparent terminal status
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/evaluator-optimizer/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                              | Scope and boundary                                                         | Lifetime / durability                             |
 | -------------------------------- | ---------------------------------- | -------------------------------------------------------------------------- | ------------------------------------------------- |
@@ -1649,7 +1649,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store           | Large candidate versions and final approved document                       | Conditional; business retention period            |
 | **Telemetry**                    | Observability platform             | Scores, deltas, iterations, latency, usage, and cost                       | Operational retention; not authoritative approval |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                  | Requirement     | Why                                                                        |
 | --------------------------- | --------------- | -------------------------------------------------------------------------- |
@@ -1675,7 +1675,7 @@ sequenceDiagram
 | Completion policy           | **Required**    | Defines approval, non-improvement, escalation, and terminal failure        |
 | Hard limits                 | **Required**    | Bounds iterations, tokens, time, cost, and regression                      |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -1689,7 +1689,7 @@ The smallest correct implementation contains:
 
 It can keep candidates in process memory, but it must evaluate and revise identifiable versions. One critique with no revision path is evaluation, not Evaluator-Optimizer.
 
-## Production additions
+### Production additions
 
 * External candidate, feedback, rubric, and approval versions with immutable artifact references.
 * Rubric governance, evaluator calibration, regression sets, and independent policy versioning.
@@ -1701,7 +1701,7 @@ It can keep candidates in process memory, but it must evaluate and revise identi
 * Per-loop token, time, cost, and model-call budgets.
 * Tracing that correlates candidate, rubric, evaluator result, revision, and final disposition.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/evaluator-optimizer/low-code.svg)
 
@@ -1722,7 +1722,7 @@ It can keep candidates in process memory, but it must evaluate and revise identi
 
 Copilot Studio supplies agent roles and deterministic automation, but the maker composes the rubric loop and owns candidate versions, feedback, counters, stop conditions, and recovery. Foundry-style evaluation measurement is not supplied by Copilot Studio and would still not create a revision loop by itself.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/evaluator-optimizer/managed-pro-code.svg)
 
@@ -1743,7 +1743,7 @@ Copilot Studio supplies agent roles and deterministic automation, but the maker 
 
 Agent Framework implements the generate/evaluate/revise graph; GA Foundry Hosted agents supply managed execution. Verify language-specific Agent Framework hosting package maturity. Foundry evaluations can measure quality but do not supply the runtime revision loop, candidate store, rubric governance, or terminal policy.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/evaluator-optimizer/custom-code-first.svg)
 
@@ -1783,7 +1783,7 @@ Agent Framework implements the generate/evaluate/revise graph; GA Foundry Hosted
 * Long-term memory is not candidate, rubric, feedback, or approval state.
 * Agent Framework supplies the graph primitives; do not overstate a generic packaged Evaluator-Optimizer orchestration.
 
-## Official references
+### Official references
 
 * [Agent Framework workflow edges](https://learn.microsoft.com/en-us/agent-framework/workflows/edges)
 * [Agent Framework workflow state](https://learn.microsoft.com/en-us/agent-framework/workflows/state)
@@ -1800,15 +1800,15 @@ Agent Framework implements the generate/evaluate/revise graph; GA Foundry Hosted
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 A Conditional Graph / State Machine advances work through explicit lifecycle states and permitted transitions. Guards, terminal states, interrupts, and recoverable execution position—not merely an if/else prompt or a revision loop—define the pattern.
 
-## Professional-services scenario
+### Professional-services scenario
 
 An equipment-purchase request moves through eligibility, budget, information-security, accessibility, manager approval, procurement, fulfillment, and exception states. Agents interpret requests and evidence, while the state machine controls advancement.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -1864,11 +1864,11 @@ stateDiagram-v2
     Cancelled --> [*]
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/conditional-graph/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                                    | Scope and boundary                                                            | Lifetime / durability                                    |
 | -------------------------------- | ---------------------------------------- | ----------------------------------------------------------------------------- | -------------------------------------------------------- |
@@ -1883,7 +1883,7 @@ stateDiagram-v2
 | **Artifacts**                    | Document or object store                 | Evidence, approvals, purchase documents, and versions                         | Conditional; business retention period                   |
 | **Telemetry**                    | Observability platform                   | Transition, guard, executor, retry, wait, and cost traces                     | Operational retention; not canonical process audit       |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                      | Requirement     | Why                                                            |
 | ------------------------------- | --------------- | -------------------------------------------------------------- |
@@ -1909,7 +1909,7 @@ stateDiagram-v2
 | Completion policy               | **Required**    | Defines valid terminal states and terminal failure             |
 | Hard limits                     | **Conditional** | Bounds retries, loops, waits, concurrency, tokens, and cost    |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -1923,7 +1923,7 @@ The smallest correct implementation contains:
 
 A short in-process graph can use in-memory execution state, but it must not claim restart durability. A fixed linear path with no meaningful lifecycle semantics is Sequential.
 
-## Production additions
+### Production additions
 
 * Separate workflow execution state, runtime checkpoints, and authoritative business case/task state.
 * Persist transition intent before side effects and record outcome before advancing.
@@ -1936,7 +1936,7 @@ A short in-process graph can use in-memory execution state, but it must not clai
 * Trace business process, execution instance, state, transition, event, tool, and cost IDs.
 * Add operational intervention for stuck timers, failed compensation, and manual state repair.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/conditional-graph/low-code.svg)
 
@@ -1957,7 +1957,7 @@ A short in-process graph can use in-memory execution state, but it must not clai
 
 Copilot Studio classic topics and agent flows can natively express explicit branches and loops; the new workflows surface remains preview. Dataverse should own authoritative case state for long-lived processes. Use external deterministic workflow orchestration where process durability exceeds an agent turn, and do not call waiting flow state an arbitrary Agent Framework checkpoint.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/conditional-graph/managed-pro-code.svg)
 
@@ -1978,7 +1978,7 @@ Copilot Studio classic topics and agent flows can natively express explicit bran
 
 Agent Framework implements the graph and standard checkpoints; GA Foundry Hosted agents supply managed execution. Verify language-specific Agent Framework hosting package maturity. The business case remains external. If distributed durable execution is required, add Durable Functions/Durable Task or explicitly accept the preview Durable Extension as a separate adjacent capability.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/conditional-graph/custom-code-first.svg)
 
@@ -2018,7 +2018,7 @@ Agent Framework implements the graph and standard checkpoints; GA Foundry Hosted
 * Agent Framework standard checkpoints are distinct from the preview/prerelease Durable Extension.
 * Do not build new dependencies on the retiring Foundry visual workflow designer.
 
-## Official references
+### Official references
 
 * [Agent Framework workflow edges](https://learn.microsoft.com/en-us/agent-framework/workflows/edges)
 * [Agent Framework workflow state](https://learn.microsoft.com/en-us/agent-framework/workflows/state)
@@ -2036,15 +2036,15 @@ Agent Framework implements the graph and standard checkpoints; GA Foundry Hosted
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
-## Pattern intent
+### Pattern intent
 
 Blackboard agents coordinate indirectly by claiming work and reading or updating durable structured shared state and versioned artifacts. Multi-writer concurrency, notification, conflict resolution, and completion policy—not a common chat transcript—define the pattern.
 
-## Professional-services scenario
+### Professional-services scenario
 
 A workplace case workspace holds the associate's request, evidence checklist, policy excerpts, assigned specialists, pending approvals, generated documents, and decision history. HR, IT, travel, and procurement agents contribute asynchronously without sharing a full chat transcript.
 
-## Interaction sequence
+### Interaction sequence
 
 ```mermaid
 sequenceDiagram
@@ -2079,11 +2079,11 @@ sequenceDiagram
     B-->>U: Current status or completed outcome
 ```
 
-## Logical component architecture
+### Logical component architecture
 
 ![1.00](diagrams/blackboard/logical.svg)
 
-## Control and state model
+### Control and state model
 
 | Concern                          | Owner                                                         | Scope and boundary                                                                | Lifetime / durability                                           |
 | -------------------------------- | ------------------------------------------------------------- | --------------------------------------------------------------------------------- | --------------------------------------------------------------- |
@@ -2098,7 +2098,7 @@ sequenceDiagram
 | **Artifacts**                    | Document or object store                                      | Evidence, generated documents, and immutable versions                             | Required; business retention period                             |
 | **Telemetry**                    | Observability platform                                        | Claims, versions, contributions, conflicts, events, tools, and cost               | Operational retention; not the decision history                 |
 
-## Capability bill of materials
+### Capability bill of materials
 
 | Capability                        | Requirement     | Why                                                                             |
 | --------------------------------- | --------------- | ------------------------------------------------------------------------------- |
@@ -2124,7 +2124,7 @@ sequenceDiagram
 | Completion policy                 | **Required**    | Determines when case, task set, or artifact is complete                         |
 | Hard limits                       | **Conditional** | Bounds claims, retries, stale work, concurrency, tokens, time, and cost         |
 
-## Minimum viable implementation
+### Minimum viable implementation
 
 The smallest correct implementation contains:
 
@@ -2138,7 +2138,7 @@ The smallest correct implementation contains:
 
 It can use a single transactional database plus object/document storage. A shared transcript alone is Group Chat, not a blackboard.
 
-## Production additions
+### Production additions
 
 * Canonical task, claim, lease, heartbeat, attempt, approval, and failure schema.
 * ETag/row-version conditional writes, idempotency keys, and duplicate-contribution lookup.
@@ -2151,7 +2151,7 @@ It can use a single transactional database plus object/document storage. A share
 * Per-tenant concurrency, cost, and storage quotas.
 * Traces connecting case, task, claim, event, worker, artifact version, decision, and cost.
 
-## Low-code realization
+### Low-code realization
 
 ![1.00](diagrams/blackboard/low-code.svg)
 
@@ -2172,7 +2172,7 @@ It can use a single transactional database plus object/document storage. A share
 
 Copilot Studio supplies contributors and deterministic actions; Dataverse and SharePoint supply the defining shared state and artifacts. The application must implement claims, optimistic concurrency, stale-work handling, conflict resolution, and completion. Conversation context and preview memory remain separate concerns.
 
-## Managed pro-code realization
+### Managed pro-code realization
 
 ![1.00](diagrams/blackboard/managed-pro-code.svg)
 
@@ -2193,7 +2193,7 @@ Copilot Studio supplies contributors and deterministic actions; Dataverse and Sh
 
 Agent Framework supplies the worker logic and GA Foundry Hosted agents supply managed execution. Verify language-specific Agent Framework hosting package maturity. The defining blackboard, task/claim records, and artifacts remain external. Foundry conversation state, managed memory, and session files cannot be used as transactional multi-writer coordination.
 
-## Custom code-first realization
+### Custom code-first realization
 
 ![1.00](diagrams/blackboard/custom-code-first.svg)
 
@@ -2233,7 +2233,7 @@ Agent Framework supplies the worker logic and GA Foundry Hosted agents supply ma
 * Event Grid announces state changes; use commands such as Service Bus messages for owned work.
 * Foundry conversations, managed memory, and session files are not authoritative business state or a transactional shared workspace.
 
-## Official references
+### Official references
 
 * [Agent Framework workflow state](https://learn.microsoft.com/en-us/agent-framework/workflows/state)
 * [Foundry runtime components](https://learn.microsoft.com/en-us/azure/foundry/agents/concepts/runtime-components)
