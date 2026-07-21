@@ -1,0 +1,91 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+gateway: API Management / Application Gateway (Platform-adjacent) {
+  class: adjacent
+}
+
+runtime: Application-Selected Runtime {
+  class: adjacent
+
+  endpoint: Agent API (Custom) {
+    class: custom
+  }
+
+  router: Agent Framework Router (Native Framework) {
+    class: native
+  }
+
+  specialists: Agent Framework Specialists {
+    class: native
+  }
+}
+
+custom: Application-Owned Control {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  registry_schema: Capability Taxonomy and Tenant Rules {
+    class: custom
+  }
+
+  session_map: Authorized Session Mapping {
+    class: custom
+    shape: cylinder
+  }
+
+  policy: Confidence and Fallback Policy {
+    class: custom
+  }
+}
+
+adjacent: Azure Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  registry_store: Capability Registry Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  audit: Dataverse / Cosmos Route Audit {
+    class: adjacent
+    shape: cylinder
+  }
+
+  tools: Functions / MCP Services {
+    class: adjacent
+  }
+
+  telemetry: Application Insights / OpenTelemetry {
+    class: adjacent
+  }
+}
+
+associate -> gateway: request
+gateway -> runtime.endpoint: authenticated request
+runtime.endpoint -> custom.session_map: authorize + restore session
+runtime.endpoint -> runtime.router: intent + context
+custom.registry_schema -> adjacent.registry_store: schema + tenant policy
+adjacent.registry_store -> runtime.router: capability metadata
+custom.policy -> runtime.router: route rules
+runtime.router -> runtime.specialists: invoke selected agent
+runtime.specialists -> adjacent.tools: tool calls
+runtime.specialists -> runtime.router: bounded result
+runtime.router -> adjacent.audit: decision + correlation
+runtime.endpoint -> adjacent.telemetry: traces + metrics
+runtime.endpoint -> gateway: response
+gateway -> associate: response

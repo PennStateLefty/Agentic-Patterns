@@ -1,0 +1,98 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio Participants (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  agents: Published Specialist Agents {
+    class: native
+  }
+}
+
+custom: External Group-Chat Runtime {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  manager: Speaker and Termination Manager {
+    class: custom
+  }
+
+  policy: Turn, Conflict, and Hard-Limit Policy {
+    class: custom
+  }
+
+  synthesizer: Final Synthesizer {
+    class: custom
+  }
+}
+
+adjacent: Power Platform and Azure (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  shared_chat: Dataverse Shared Conversation {
+    class: adjacent
+    shape: cylinder
+  }
+
+  working_state: Dataverse Findings and Decisions {
+    class: adjacent
+    shape: cylinder
+  }
+
+  invoker: Power Automate / Agent Endpoint Invoker {
+    class: adjacent
+  }
+
+  artifacts: SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Human Escalation {
+    class: adjacent
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: accommodation request
+cps.front_door -> custom.manager: start deliberation
+custom.policy -> custom.manager: speaker + stop rules
+adjacent.shared_chat -> custom.manager: current discussion
+custom.manager -> adjacent.invoker: select one participant turn
+adjacent.invoker -> cps.agents: invoke with shared history
+cps.agents -> adjacent.shared_chat: append contribution
+cps.agents -> adjacent.working_state: structured findings
+custom.manager -> custom.synthesizer: completion reached
+adjacent.shared_chat -> custom.synthesizer: completed discussion
+adjacent.working_state -> custom.synthesizer: decisions + open questions
+custom.synthesizer -> adjacent.artifacts: recommendation
+custom.manager -> adjacent.approval: unresolved / high risk
+custom.manager -> adjacent.telemetry: rounds + speakers + cost
+custom.synthesizer -> cps.front_door: recommendation
+cps.front_door -> associate: recommendation + escalation

@@ -1,0 +1,120 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    controller: Agent Framework Graph / State Machine {
+      class: native
+    }
+
+    agents: Review Agents and Executors {
+      class: native
+    }
+
+    checkpoints: Agent Framework Standard Checkpoints {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Process Model {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  transitions: Versioned States, Guards, and Terminal Policy {
+    class: custom
+  }
+
+  reliability: Idempotency and Compensation Policy {
+    class: custom
+  }
+}
+
+adjacent: Operational State and Durability (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  checkpoint_store: Production Checkpoint Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  case_state: Dataverse / Cosmos Business Case {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Functions / Durable Task {
+    class: adjacent
+  }
+
+  durable_extension: Agent Framework Durable Extension (Preview) {
+    class: preview
+  }
+
+  approvals: Approval and Callback Service {
+    class: adjacent
+  }
+
+  artifacts: Blob / SharePoint Evidence {
+    class: adjacent
+    shape: cylinder
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: equipment request
+foundry.endpoint -> foundry.hosted.controller
+foundry.conversation -> foundry.hosted.controller: request context only
+custom.transitions -> foundry.hosted.controller: states + guarded transitions
+foundry.hosted.controller -> foundry.hosted.agents: bounded state action
+foundry.hosted.agents -> foundry.toolbox: tools
+foundry.hosted.controller -> foundry.hosted.checkpoints: checkpoint boundary
+foundry.hosted.checkpoints -> adjacent.checkpoint_store: persist snapshot
+foundry.hosted.controller -> adjacent.case_state: business status + decision
+foundry.hosted.controller -> adjacent.approvals: suspend for decision
+adjacent.approvals -> foundry.endpoint: authenticated callback
+adjacent.durable -> foundry.endpoint: conditional durable resume
+adjacent.durable_extension -> adjacent.durable: optional preview integration
+custom.reliability -> foundry.hosted.agents: side-effect policy
+foundry.hosted.agents -> adjacent.artifacts: evidence + output
+foundry.endpoint -> adjacent.telemetry: transitions + correlation
+foundry.endpoint -> associate: status / outcome

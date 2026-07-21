@@ -1,0 +1,104 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+gateway: API Management (Platform-adjacent) {
+  class: adjacent
+}
+
+runtime: Application-Selected Runtime {
+  class: adjacent
+
+  api: Agent API {
+    class: custom
+  }
+
+  scheduler: Agent Framework Concurrent Scheduler {
+    class: native
+  }
+
+  workers: Isolated Specialist Workers {
+    class: native
+  }
+
+  aggregator: Fan-In Aggregator {
+    class: native
+  }
+}
+
+custom: Application-Owned Policies {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  contracts: Branch Result Contracts {
+    class: custom
+  }
+
+  aggregation: Aggregation, Quorum, and Conflict Policy {
+    class: custom
+  }
+
+  reliability: Backpressure and Idempotency {
+    class: custom
+  }
+}
+
+adjacent: Azure Execution and State (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  checkpoint: Cosmos DB / SQL Branch State {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Task Scheduler {
+    class: adjacent
+  }
+
+  queue: Service Bus Commands {
+    class: adjacent
+  }
+
+  artifacts: Blob Storage Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  tools: Functions / MCP Services {
+    class: adjacent
+  }
+
+  telemetry: Application Insights / OpenTelemetry {
+    class: adjacent
+  }
+}
+
+associate -> gateway: assignment request
+gateway -> runtime.api: authenticated request
+runtime.api -> runtime.scheduler: bounded fan-out
+custom.contracts -> runtime.scheduler: branch schemas
+runtime.scheduler -> adjacent.queue: independent commands
+adjacent.queue -> runtime.workers: concurrent delivery
+custom.reliability -> runtime.workers: retry + idempotency
+runtime.workers -> adjacent.tools: tool calls
+runtime.workers -> adjacent.checkpoint: typed branch results
+adjacent.checkpoint -> runtime.aggregator: all / quorum / timeout
+custom.aggregation -> runtime.aggregator: merge + conflict rules
+adjacent.durable -> runtime.scheduler: resume pending branches
+runtime.aggregator -> adjacent.artifacts: readiness checklist
+runtime.api -> adjacent.telemetry: branch traces + cost
+runtime.api -> gateway: prioritized result
+gateway -> associate: prioritized result

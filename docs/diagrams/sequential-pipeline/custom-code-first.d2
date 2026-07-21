@@ -1,0 +1,109 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+gateway: API Management (Platform-adjacent) {
+  class: adjacent
+}
+
+runtime: Application-Selected Runtime {
+  class: adjacent
+
+  api: Agent API {
+    class: custom
+  }
+
+  controller: Agent Framework Sequential Controller {
+    class: native
+  }
+
+  interpretation: Interpretation Agent {
+    class: native
+  }
+
+  policy: Policy Agent {
+    class: native
+  }
+
+  guidance: Guidance Agent {
+    class: native
+  }
+}
+
+custom: Application-Owned Contracts {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  schemas: Stage Schemas and Validation {
+    class: custom
+  }
+
+  completion: Completion and Failure Policy {
+    class: custom
+  }
+
+  reliability: Idempotency and Compensation {
+    class: custom
+  }
+}
+
+adjacent: Azure Execution and State (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  checkpoint: Cosmos DB / SQL Checkpoints {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Task Scheduler {
+    class: adjacent
+  }
+
+  artifacts: Blob Storage Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: HITL API / Teams Callback {
+    class: adjacent
+  }
+
+  tools: Functions / MCP Services {
+    class: adjacent
+  }
+
+  telemetry: Application Insights / OpenTelemetry {
+    class: adjacent
+  }
+}
+
+associate -> gateway: request
+gateway -> runtime.api: authenticated request
+runtime.api -> runtime.controller: validated input
+custom.schemas -> runtime.controller: ordered contracts
+custom.completion -> runtime.controller: stop / failure rules
+runtime.controller -> runtime.interpretation: stage 1
+runtime.interpretation -> runtime.policy: typed result
+runtime.policy -> runtime.guidance: typed result
+runtime.guidance -> adjacent.artifacts: instructions + case note
+runtime -> adjacent.tools: tool calls
+runtime.controller -> adjacent.checkpoint: standard checkpoint
+adjacent.durable -> runtime.controller: conditional resume
+custom.reliability -> runtime: side-effect policy
+runtime.controller -> adjacent.approval: conditional gate
+runtime.api -> adjacent.telemetry: traces + cost
+runtime.api -> gateway: result
+gateway -> associate: result

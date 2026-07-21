@@ -1,0 +1,101 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Reviewer {
+  class: actor
+}
+
+boundary: Group Chat / Shared Conversation {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  manager: Speaker and Termination Manager {
+    class: control
+  }
+
+  participants: Deliberating Participants {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    policy: Policy Agent {
+      class: agent
+    }
+
+    relations: Employee-Relations Agent {
+      class: agent
+    }
+
+    accessibility: Accessibility Agent {
+      class: agent
+    }
+
+    advocate: Associate-Advocate Agent {
+      class: agent
+    }
+  }
+
+  shared_chat: Shared Conversation History {
+    class: state
+  }
+
+  private_state: Participant-Private State {
+    class: state
+  }
+
+  working_state: Structured Questions and Decisions {
+    class: state
+  }
+
+  policy: Turn, Conflict, and Completion Policy {
+    class: state
+  }
+
+  workflow_state: Durable Round State {
+    class: state
+  }
+
+  synthesizer: Final Synthesizer {
+    class: control
+  }
+
+  artifacts: Artifact Workspace {
+    class: state
+  }
+}
+
+telemetry: Round, Speaker, and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.manager: accommodation request
+boundary.policy -> boundary.manager: speaker + stop rules
+boundary.shared_chat -> boundary.manager: current discussion
+boundary.manager -> boundary.participants.policy: select next speaker
+boundary.manager -> boundary.participants.relations: select next speaker
+boundary.manager -> boundary.participants.accessibility: select next speaker
+boundary.manager -> boundary.participants.advocate: select next speaker
+boundary.private_state -> boundary.participants: role-local context
+boundary.participants -> boundary.shared_chat: append contribution
+boundary.participants -> boundary.working_state: structured findings
+boundary.shared_chat -> boundary.synthesizer: completed discussion
+boundary.working_state -> boundary.synthesizer: decisions + open questions
+boundary.synthesizer -> boundary.artifacts: recommendation
+boundary.synthesizer -> associate: recommendation + escalation
+boundary.workflow_state -> boundary.manager: resume round
+boundary.manager -> human: conditional escalation
+boundary.manager -> telemetry
+boundary.participants -> telemetry
+boundary.synthesizer -> telemetry

@@ -1,0 +1,100 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  intake: Associate Assistance Agent {
+    class: native
+  }
+
+  controller: Ordered Topic / Agent Flow {
+    class: native
+  }
+
+  interpretation: Interpretation Capability {
+    class: native
+  }
+
+  policy: Policy Capability {
+    class: native
+  }
+
+  guidance: Guidance Capability {
+    class: native
+  }
+
+  session: Conversation Context {
+    class: native
+    shape: cylinder
+  }
+}
+
+custom: Application-Owned Contracts {
+  class: custom
+
+  schemas: Stage Schemas and Validation {
+    class: custom
+  }
+
+  completion: Completion and Failure Policy {
+    class: custom
+  }
+}
+
+adjacent: Power Platform (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  state: Dataverse Stage State {
+    class: adjacent
+    shape: cylinder
+  }
+
+  long_running: Power Automate / Logic Apps {
+    class: adjacent
+  }
+
+  artifacts: SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Approval / Escalation {
+    class: adjacent
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.intake: request
+cps.session -> cps.intake: session context
+cps.intake -> cps.controller: validated input
+custom.schemas -> cps.controller: ordered contracts
+custom.completion -> cps.controller: stop / failure rules
+cps.controller -> cps.interpretation: stage 1
+cps.interpretation -> adjacent.state: interpreted facts
+adjacent.state -> cps.policy: stage 2
+cps.policy -> adjacent.state: policy analysis
+adjacent.state -> cps.guidance: stage 3
+cps.guidance -> adjacent.artifacts: instructions + case note
+adjacent.long_running -> cps.controller: resume bounded stage
+cps.controller -> adjacent.approval: conditional gate
+cps.intake -> adjacent.telemetry: correlation
+cps.intake -> associate: result

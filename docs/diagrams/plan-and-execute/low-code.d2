@@ -1,0 +1,87 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  specialists: Child / Connected Agents {
+    class: native
+  }
+
+  flows: Agent Flows {
+    class: native
+  }
+}
+
+custom: Application-Owned Planning Logic {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  planner: Planner / Replanner {
+    class: custom
+  }
+
+  evaluator: Progress and Stop Policy {
+    class: custom
+  }
+}
+
+adjacent: Power Platform (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  ledger: Dataverse Task Ledger {
+    class: adjacent
+    shape: cylinder
+  }
+
+  artifacts: SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approvals: Power Automate Approvals {
+    class: adjacent
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: goal
+cps.front_door -> custom.planner: request plan
+custom.planner -> adjacent.ledger: create tasks + dependencies
+adjacent.ledger -> cps.flows: ready-task trigger
+cps.flows -> cps.specialists: Run an agent node
+cps.specialists -> adjacent.artifacts: write output
+cps.specialists -> adjacent.ledger: result + observation
+adjacent.ledger -> custom.evaluator: progress
+custom.evaluator -> custom.planner: continue / replan
+custom.planner -> adjacent.ledger: revise tasks
+custom.planner -> adjacent.approvals: approval / clarification
+adjacent.approvals -> custom.planner: decision
+cps.front_door -> adjacent.telemetry: activity + correlation
+cps.front_door -> associate: status / outcome

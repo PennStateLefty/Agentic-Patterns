@@ -1,0 +1,97 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+gateway: API Management (Platform-adjacent) {
+  class: adjacent
+}
+
+runtime: Application-Selected Runtime {
+  class: adjacent
+
+  api: Agent API (Custom) {
+    class: custom
+  }
+
+  planner: Agent Framework Planner / Replanner {
+    class: native
+  }
+
+  workers: Agent Framework Specialists {
+    class: native
+  }
+
+  evaluator: Progress Evaluator {
+    class: native
+  }
+}
+
+adjacent: Azure Execution and State (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  durable: Durable Task Scheduler {
+    class: adjacent
+  }
+
+  ledger: Cosmos DB / SQL Task Ledger {
+    class: adjacent
+    shape: cylinder
+  }
+
+  queue: Service Bus Commands {
+    class: adjacent
+  }
+
+  artifacts: Blob Storage Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approvals: HITL API / Teams Callback {
+    class: adjacent
+  }
+
+  telemetry: Application Insights / OpenTelemetry {
+    class: adjacent
+  }
+}
+
+custom: Application-Owned Policies {
+  class: custom
+
+  limits: Replan, Cost, and Stop Policies {
+    class: custom
+  }
+
+  reliability: Idempotency and Compensation {
+    class: custom
+  }
+}
+
+associate -> gateway: goal
+gateway -> runtime.api: authenticated request
+runtime.api -> runtime.planner
+runtime.planner -> adjacent.ledger: create / revise plan
+custom.limits -> runtime.planner: hard limits
+adjacent.durable -> runtime.planner: resume orchestration
+runtime.planner -> adjacent.queue: assign ready task
+adjacent.queue -> runtime.workers: command
+runtime.workers -> adjacent.artifacts: write output
+runtime.workers -> adjacent.ledger: result + observation
+adjacent.ledger -> runtime.evaluator: progress
+runtime.evaluator -> runtime.planner: continue / replan
+custom.reliability -> runtime.workers: side-effect policy
+runtime.planner -> adjacent.approvals: approval / clarification
+adjacent.approvals -> adjacent.durable: external event
+runtime.api -> adjacent.telemetry: traces + cost
+runtime.api -> gateway: status / outcome
+gateway -> associate: status / outcome

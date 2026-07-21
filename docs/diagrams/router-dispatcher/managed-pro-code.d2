@@ -1,0 +1,95 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+channel: Channel or Application {
+  class: integration
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State (Native) {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    router: Agent Framework Router {
+      class: native
+    }
+
+    specialists: Agent Framework Specialists {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Policy {
+  class: custom
+
+  taxonomy: Capability Taxonomy and Tenant Rules {
+    class: custom
+  }
+
+  fallback: Route Confidence and Fallback {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  registry: Capability Registry Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  audit: Dataverse or Cosmos Route Audit {
+    class: adjacent
+    shape: cylinder
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> channel: request
+channel -> foundry.endpoint: authenticated request
+foundry.endpoint -> foundry.hosted.router
+foundry.conversation -> foundry.hosted.router: conversation context
+adjacent.registry -> foundry.hosted.router: capability metadata
+custom.taxonomy -> adjacent.registry: schema + tenant policy
+custom.fallback -> foundry.hosted.router: decision policy
+foundry.hosted.router -> foundry.hosted.specialists: invoke selected agent
+foundry.hosted.specialists -> foundry.toolbox: tools
+foundry.hosted.specialists -> foundry.hosted.router: bounded result
+foundry.hosted.router -> adjacent.audit: route decision
+foundry.endpoint -> adjacent.telemetry: traces + metrics
+foundry.endpoint -> channel: response
+channel -> associate: response

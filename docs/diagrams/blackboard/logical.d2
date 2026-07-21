@@ -1,0 +1,100 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Reviewer {
+  class: actor
+}
+
+boundary: Blackboard / Shared Workspace {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  workers: Asynchronous Specialist Contributors {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    hr: HR Agent {
+      class: agent
+    }
+
+    it: IT Agent {
+      class: agent
+    }
+
+    travel: Travel Agent {
+      class: agent
+    }
+
+    procurement: Procurement Agent {
+      class: agent
+    }
+  }
+
+  private_state: Agent-Private Working State {
+    class: state
+  }
+
+  blackboard: Durable Structured Shared Working State {
+    class: state
+  }
+
+  ledger: Task, Claim, and Approval Ledger {
+    class: state
+  }
+
+  artifacts: Versioned Artifact Workspace {
+    class: state
+  }
+
+  coordinator: Claim, Lease, and Concurrency Control {
+    class: control
+  }
+
+  events: Work-Available Event Distributor {
+    class: integration
+  }
+
+  workflow_state: Durable Worker Execution State {
+    class: state
+  }
+
+  completion: Conflict and Completion Policy {
+    class: state
+  }
+}
+
+telemetry: Contribution, Version, and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.blackboard: create workplace case
+boundary.blackboard -> boundary.events: state-change notification
+boundary.events -> boundary.workers: work available
+boundary.workers -> boundary.coordinator: claim eligible work
+boundary.coordinator -> boundary.ledger: conditional claim / lease
+boundary.private_state -> boundary.workers: isolated reasoning
+boundary.blackboard -> boundary.workers: current structured facts
+boundary.artifacts -> boundary.workers: pinned evidence versions
+boundary.workers -> boundary.blackboard: compare-and-set contribution
+boundary.workers -> boundary.artifacts: immutable artifact version
+boundary.workers -> boundary.ledger: result + release claim
+boundary.completion -> boundary.coordinator: conflict + terminal rules
+boundary.workflow_state -> boundary.workers: resume local execution
+human -> boundary.blackboard: decision + review
+boundary.blackboard -> associate: status / outcome
+boundary.workers -> telemetry
+boundary.coordinator -> telemetry
+boundary.blackboard -> telemetry

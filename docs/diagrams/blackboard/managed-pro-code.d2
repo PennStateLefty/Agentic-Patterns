@@ -1,0 +1,117 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Request Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent Workers (GA) {
+    class: native
+
+    listener: Agent Framework Event / Work Listener {
+      class: native
+    }
+
+    workers: Agent Framework Specialist Contributors {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Workspace Policy {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  claims: Claim, Lease, and Optimistic-Concurrency Logic {
+    class: custom
+  }
+
+  completion: Conflict, Stale-Work, and Completion Policy {
+    class: custom
+  }
+}
+
+adjacent: Durable Shared Workspace (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  blackboard: Dataverse / Cosmos Shared Working State {
+    class: adjacent
+    shape: cylinder
+  }
+
+  ledger: Dataverse / Cosmos Tasks and Claims {
+    class: adjacent
+    shape: cylinder
+  }
+
+  artifacts: Blob / SharePoint Versioned Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  commands: Service Bus Work Commands {
+    class: adjacent
+  }
+
+  events: Event Grid / Change Feed Events {
+    class: adjacent
+  }
+
+  approval: Approval and Callback Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: create workplace case
+foundry.endpoint -> adjacent.blackboard: structured request
+adjacent.blackboard -> adjacent.events: state change
+adjacent.events -> foundry.hosted.listener: work available
+foundry.hosted.listener -> custom.claims: claim request
+custom.claims -> adjacent.ledger: conditional claim / lease
+foundry.hosted.listener -> adjacent.commands: owned work command
+adjacent.commands -> foundry.hosted.workers: at-least-once delivery
+adjacent.blackboard -> foundry.hosted.workers: current facts
+adjacent.artifacts -> foundry.hosted.workers: pinned evidence
+foundry.hosted.workers -> foundry.toolbox: tools
+foundry.hosted.workers -> adjacent.blackboard: optimistic update
+foundry.hosted.workers -> adjacent.artifacts: new artifact version
+foundry.hosted.workers -> adjacent.ledger: result + release claim
+custom.completion -> adjacent.ledger: stale-work + terminal rules
+adjacent.approval -> adjacent.blackboard: human decision
+foundry.endpoint -> adjacent.telemetry: contribution correlation
+foundry.endpoint -> associate: status / outcome

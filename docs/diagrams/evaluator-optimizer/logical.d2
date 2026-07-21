@@ -1,0 +1,80 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Approver {
+  class: actor
+}
+
+boundary: Evaluator-Optimizer {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  controller: Revision Loop Controller {
+    class: control
+  }
+
+  generator: Drafting Optimizer {
+    class: agent
+  }
+
+  evaluator: Policy Evaluator {
+    class: agent
+  }
+
+  rubric: Versioned Evaluation Rubric {
+    class: state
+  }
+
+  candidate: Versioned Candidate and Feedback {
+    class: state
+  }
+
+  private_state: Generator and Evaluator Private State {
+    class: state
+  }
+
+  workflow_state: Iteration and Checkpoint State {
+    class: state
+  }
+
+  artifacts: Artifact Workspace and Versions {
+    class: state
+  }
+
+  completion: Approval and Hard-Limit Policy {
+    class: state
+  }
+}
+
+telemetry: Iteration, Score, and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.controller: exception-request goal
+boundary.controller -> boundary.generator: create draft
+boundary.private_state -> boundary.generator: private drafting context
+boundary.generator -> boundary.candidate: candidate version
+boundary.candidate -> boundary.evaluator: evaluate exact version
+boundary.rubric -> boundary.evaluator: criteria + thresholds
+boundary.private_state -> boundary.evaluator: private review context
+boundary.evaluator -> boundary.candidate: score + actionable feedback
+boundary.completion -> boundary.controller: pass + iteration limits
+boundary.candidate -> boundary.controller: evaluation result
+boundary.controller -> boundary.generator: revise with feedback
+boundary.controller -> boundary.artifacts: approved version
+boundary.controller -> human: conditional approval / missing evidence
+human -> boundary.controller: decision / evidence
+boundary.workflow_state -> boundary.controller: resume iteration
+boundary.controller -> associate: approved draft or escalation
+boundary.controller -> telemetry
+boundary.generator -> telemetry
+boundary.evaluator -> telemetry

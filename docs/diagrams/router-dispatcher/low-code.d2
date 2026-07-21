@@ -1,0 +1,90 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+policy: Routing Metadata and Fallback Rules (Custom) {
+  class: custom
+}
+
+cps: Copilot Studio (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  router: Generative Orchestration {
+    class: native
+  }
+
+  session: Conversation Context {
+    class: native
+    shape: cylinder
+  }
+
+  catalog: Capability Descriptions {
+    class: native
+    shape: cylinder
+  }
+
+  specialists: Domain Capabilities {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      border-radius: 8
+    }
+
+    child: Child Agents {
+      class: native
+    }
+    connected: Connected Agents {
+      class: native
+    }
+    topics: Topics and Tools {
+      class: native
+    }
+  }
+}
+
+adjacent: Power Platform and Azure (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  audit: Dataverse Route Audit {
+    class: adjacent
+    shape: cylinder
+  }
+
+  telemetry: Analytics and Application Insights {
+    class: adjacent
+  }
+
+  human: Human Escalation {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: request
+cps.front_door -> cps.router: intent + session context
+cps.session -> cps.router: recent conversation
+cps.catalog -> cps.router: names + descriptions
+policy -> cps.router: confidence + fallback
+cps.router -> cps.specialists: select one capability
+cps.specialists -> cps.front_door: bounded result
+cps.router -> adjacent.audit: decision + correlation ID
+cps.router -> adjacent.human: low confidence / exception
+cps.front_door -> adjacent.telemetry: activity
+cps.front_door -> associate: response

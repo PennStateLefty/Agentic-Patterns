@@ -1,0 +1,74 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Reviewer {
+  class: actor
+}
+
+boundary: Sequential Pipeline {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  intake: Request Interface {
+    class: agent
+  }
+
+  controller: Ordered Stage Controller {
+    class: control
+  }
+
+  interpretation: Fact Interpretation {
+    class: agent
+  }
+
+  policy: Policy Reconciliation {
+    class: agent
+  }
+
+  guidance: Guidance and Case Note {
+    class: agent
+  }
+
+  handoff_state: Versioned Stage Inputs and Outputs {
+    class: state
+  }
+
+  workflow_state: Durable Execution State {
+    class: state
+  }
+
+  artifacts: Artifact Workspace {
+    class: state
+  }
+}
+
+telemetry: Trace and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.intake: ambiguous request
+boundary.intake -> boundary.controller: validated input
+boundary.controller -> boundary.interpretation: stage 1
+boundary.interpretation -> boundary.handoff_state: interpreted facts
+boundary.handoff_state -> boundary.policy: stage 2 contract
+boundary.policy -> boundary.handoff_state: grounded analysis
+boundary.handoff_state -> boundary.guidance: stage 3 contract
+boundary.guidance -> boundary.artifacts: instructions + case note
+boundary.guidance -> boundary.intake: final result
+boundary.intake -> associate: guidance
+boundary.workflow_state -> boundary.controller: resume at stage boundary
+boundary.controller -> human: conditional approval
+human -> boundary.controller: decision
+boundary.controller -> telemetry
+boundary.interpretation -> telemetry
+boundary.policy -> telemetry
+boundary.guidance -> telemetry

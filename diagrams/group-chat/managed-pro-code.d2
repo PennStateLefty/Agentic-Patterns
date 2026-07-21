@@ -1,0 +1,117 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Endpoint Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    manager: Agent Framework Group Chat Manager {
+      class: native
+    }
+
+    participants: Agent Framework Participants {
+      class: native
+    }
+
+    shared_chat: Agent Framework Shared Chat {
+      class: native
+      shape: cylinder
+    }
+
+    synthesizer: Final Synthesizer {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Chat Policy {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  policy: Speaker, Conflict, Completion, and Limits {
+    class: custom
+  }
+
+  compaction: Context Selection and Compaction {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  checkpoint: Production Checkpoint / Round Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  decisions: Dataverse / Cosmos Decisions {
+    class: adjacent
+    shape: cylinder
+  }
+
+  artifacts: Blob / SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Approval and Escalation Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: accommodation request
+foundry.endpoint -> foundry.hosted.manager
+foundry.conversation -> foundry.hosted.manager: request context only
+custom.policy -> foundry.hosted.manager: speaker + stop rules
+custom.compaction -> foundry.hosted.manager: bounded shared context
+foundry.hosted.shared_chat -> foundry.hosted.manager: current discussion
+foundry.hosted.manager -> foundry.hosted.participants: select next speaker
+foundry.hosted.participants -> foundry.toolbox: tools
+foundry.hosted.participants -> foundry.hosted.shared_chat: append contribution
+foundry.hosted.participants -> adjacent.decisions: structured finding
+foundry.hosted.manager -> adjacent.checkpoint: round boundary
+foundry.hosted.manager -> foundry.hosted.synthesizer: completion reached
+foundry.hosted.shared_chat -> foundry.hosted.synthesizer: completed discussion
+foundry.hosted.synthesizer -> adjacent.artifacts: recommendation
+foundry.hosted.manager -> adjacent.approval: unresolved / high risk
+foundry.endpoint -> adjacent.telemetry: rounds + speakers + cost
+foundry.endpoint -> associate: recommendation + escalation

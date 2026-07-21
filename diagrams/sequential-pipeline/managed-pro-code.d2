@@ -1,0 +1,108 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    controller: Agent Framework Sequential Controller {
+      class: native
+    }
+
+    interpretation: Interpretation Agent {
+      class: native
+    }
+
+    policy: Policy Agent {
+      class: native
+    }
+
+    guidance: Guidance Agent {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Contracts {
+  class: custom
+
+  schemas: Stage Schemas and Validation {
+    class: custom
+  }
+
+  completion: Completion and Failure Policy {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  checkpoint: Production Checkpoint Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Functions / Durable Task {
+    class: adjacent
+  }
+
+  artifacts: Blob / SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Approval and Callback Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: request
+foundry.endpoint -> foundry.hosted.controller
+foundry.conversation -> foundry.hosted.controller: session context
+custom.schemas -> foundry.hosted.controller: ordered contracts
+custom.completion -> foundry.hosted.controller: stop / failure rules
+foundry.hosted.controller -> foundry.hosted.interpretation: stage 1
+foundry.hosted.interpretation -> foundry.hosted.policy: typed result
+foundry.hosted.policy -> foundry.hosted.guidance: typed result
+foundry.hosted.guidance -> adjacent.artifacts: instructions + case note
+foundry.hosted -> foundry.toolbox: tools
+foundry.hosted.controller -> adjacent.checkpoint: standard checkpoint
+adjacent.durable -> foundry.endpoint: conditional resume as new invocation
+foundry.hosted.controller -> adjacent.approval: conditional gate
+foundry.endpoint -> adjacent.telemetry: traces + cost
+foundry.endpoint -> associate: result

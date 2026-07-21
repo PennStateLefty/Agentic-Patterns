@@ -1,0 +1,92 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Reviewer {
+  class: actor
+}
+
+boundary: Supervisor / Manager-Worker {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  supervisor: Central Supervisor and Synthesizer {
+    class: control
+  }
+
+  registry: Worker Capability Registry {
+    class: state
+  }
+
+  workers: Bounded Specialist Workers {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    benefits: Benefits Worker {
+      class: agent
+    }
+
+    staffing: Staffing Worker {
+      class: agent
+    }
+
+    policy: Policy Worker {
+      class: agent
+    }
+  }
+
+  private_state: Private Worker Contexts {
+    class: state
+  }
+
+  shared_state: Structured Results and Decisions {
+    class: state
+  }
+
+  ledger: Delegation Ledger {
+    class: state
+  }
+
+  workflow_state: Durable Execution State {
+    class: state
+  }
+
+  artifacts: Artifact Workspace {
+    class: state
+  }
+}
+
+telemetry: Delegation Trace and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.supervisor: parental-leave goal
+boundary.registry -> boundary.supervisor: worker capabilities
+boundary.supervisor -> boundary.workers.benefits: bounded assignment
+boundary.supervisor -> boundary.workers.staffing: bounded assignment
+boundary.supervisor -> boundary.workers.policy: bounded assignment
+boundary.private_state -> boundary.workers: isolated task context
+boundary.workers.benefits -> boundary.shared_state: bounded result
+boundary.workers.staffing -> boundary.shared_state: bounded result
+boundary.workers.policy -> boundary.shared_state: bounded result
+boundary.supervisor -> boundary.ledger: assignment + outcome
+boundary.shared_state -> boundary.supervisor: reconcile + synthesize
+boundary.workflow_state -> boundary.supervisor: resume
+boundary.supervisor -> boundary.artifacts: sequenced plan
+boundary.supervisor -> human: conditional escalation
+human -> boundary.supervisor: decision
+boundary.supervisor -> associate: unified response
+boundary.supervisor -> telemetry
+boundary.workers -> telemetry

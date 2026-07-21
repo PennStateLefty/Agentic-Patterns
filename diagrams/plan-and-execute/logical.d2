@@ -1,0 +1,69 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Reviewer {
+  class: actor
+}
+
+boundary: Plan-and-Execute Pattern {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  planner: Planner / Replanner {
+    class: control
+  }
+
+  scheduler: Task Scheduler {
+    class: control
+  }
+
+  evaluator: Progress Evaluator {
+    class: control
+  }
+
+  workers: Specialist Executors {
+    class: agent
+  }
+
+  ledger: Authoritative Task Ledger {
+    class: state
+  }
+
+  workflow: Durable Execution State {
+    class: state
+  }
+
+  artifacts: Artifact Workspace {
+    class: state
+  }
+}
+
+telemetry: Trace and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.planner: long-horizon goal
+boundary.planner -> boundary.ledger: create plan + dependencies
+boundary.ledger -> boundary.scheduler: ready tasks
+boundary.scheduler -> boundary.workers: assign bounded task
+boundary.workers -> boundary.artifacts: write outputs
+boundary.workers -> boundary.ledger: result + observation
+boundary.ledger -> boundary.evaluator: progress + failures
+boundary.evaluator -> boundary.planner: continue / replan / escalate
+boundary.planner -> boundary.ledger: revise plan
+boundary.workflow -> boundary.scheduler: resume execution
+boundary.planner -> human: approval / clarification
+human -> boundary.planner: decision
+boundary.planner -> associate: outcome + status
+boundary.planner -> telemetry
+boundary.scheduler -> telemetry
+boundary.workers -> telemetry

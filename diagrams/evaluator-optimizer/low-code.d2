@@ -1,0 +1,97 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  generator: Drafting Agent {
+    class: native
+  }
+
+  evaluator: Policy Evaluator Agent {
+    class: native
+  }
+
+  flows: Agent Flow Actions {
+    class: native
+  }
+}
+
+custom: Workflow-Composed Review Loop {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  controller: Revision Controller {
+    class: custom
+  }
+
+  rubric: Versioned Rubric and Thresholds {
+    class: custom
+  }
+
+  completion: Approval, Iteration, and Cost Limits {
+    class: custom
+  }
+}
+
+adjacent: Power Platform (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  candidate: Dataverse Candidate and Feedback {
+    class: adjacent
+    shape: cylinder
+  }
+
+  artifacts: SharePoint Versioned Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Power Automate Approval {
+    class: adjacent
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: exception-request goal
+cps.front_door -> custom.controller: start review loop
+custom.controller -> cps.generator: create / revise
+cps.generator -> adjacent.candidate: candidate version
+adjacent.candidate -> cps.evaluator: exact version
+custom.rubric -> cps.evaluator: criteria + thresholds
+cps.evaluator -> adjacent.candidate: score + feedback
+adjacent.candidate -> custom.controller: evaluation result
+custom.completion -> custom.controller: pass + hard limits
+custom.controller -> cps.generator: revision required
+custom.controller -> adjacent.artifacts: approved version
+custom.controller -> adjacent.approval: high-risk / missing evidence
+cps.flows -> cps.generator: bounded deterministic actions
+custom.controller -> adjacent.telemetry: iterations + scores + cost
+custom.controller -> cps.front_door: approved result / escalation
+cps.front_door -> associate: result

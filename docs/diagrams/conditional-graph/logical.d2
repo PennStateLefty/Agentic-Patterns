@@ -1,0 +1,105 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Approver {
+  class: actor
+}
+
+boundary: Conditional Graph / State Machine {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  controller: Transition Controller {
+    class: control
+  }
+
+  transitions: Versioned Transition Rules {
+    class: state
+  }
+
+  states: Explicit Lifecycle States {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#5C2D91"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    eligibility: Eligibility {
+      class: control
+    }
+
+    budget: Budget Review {
+      class: control
+    }
+
+    security: Security / Accessibility {
+      class: control
+    }
+
+    approval: Manager Approval {
+      class: control
+    }
+
+    procurement: Procurement / Fulfillment {
+      class: control
+    }
+
+    terminal: Completed / Rejected / Cancelled {
+      class: control
+    }
+  }
+
+  agents: Review Agents and Deterministic Tools {
+    class: agent
+  }
+
+  workflow_state: Durable Execution Position and Timers {
+    class: state
+  }
+
+  checkpoint: Runtime Checkpoints {
+    class: state
+  }
+
+  case_state: Authoritative Business Case Store {
+    class: state
+  }
+
+  artifacts: Evidence and Artifact Workspace {
+    class: state
+  }
+}
+
+telemetry: Transition Audit and Trace Correlation {
+  class: operations
+}
+
+associate -> boundary.controller: equipment request
+boundary.transitions -> boundary.controller: valid transitions + guards
+boundary.controller -> boundary.states.eligibility: enter state
+boundary.states.eligibility -> boundary.agents: interpret request
+boundary.controller -> boundary.states.budget: approved transition
+boundary.controller -> boundary.states.security: approved transition
+boundary.controller -> boundary.states.approval: human-gated transition
+boundary.states.approval -> human: suspend + request decision
+human -> boundary.controller: authenticated decision
+boundary.controller -> boundary.states.procurement: approved transition
+boundary.controller -> boundary.states.terminal: terminal transition
+boundary.controller -> boundary.workflow_state: position + pending work
+boundary.controller -> boundary.checkpoint: restorable boundary
+boundary.controller -> boundary.case_state: business status + decision
+boundary.agents -> boundary.artifacts: evidence + outputs
+boundary.workflow_state -> boundary.controller: resume / timer / event
+boundary.controller -> associate: status / outcome
+boundary.controller -> telemetry
+boundary.agents -> telemetry

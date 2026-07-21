@@ -1,0 +1,93 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State (Native) {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    planner: Agent Framework Planner / Magentic {
+      class: native
+    }
+
+    workers: Agent Framework Specialists {
+      class: native
+    }
+
+    evaluator: Progress Evaluator {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+adjacent: Operational State and Durability (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  ledger: Dataverse / Cosmos Task Ledger {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Functions / Task Scheduler {
+    class: adjacent
+  }
+
+  artifacts: Blob / SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approvals: Approval and Callback Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: goal
+foundry.endpoint -> foundry.hosted.planner
+foundry.conversation -> foundry.hosted.planner: conversation context
+foundry.hosted.planner -> adjacent.ledger: plan + dependencies
+adjacent.durable -> adjacent.ledger: schedule / resume
+adjacent.durable -> foundry.endpoint: resume next round (new invocation)
+foundry.hosted.planner -> foundry.hosted.workers: assign task in bounded round
+foundry.hosted.workers -> foundry.toolbox: tools
+foundry.hosted.workers -> adjacent.artifacts: write output
+foundry.hosted.workers -> adjacent.ledger: result + observation
+adjacent.ledger -> foundry.hosted.evaluator: progress
+foundry.hosted.evaluator -> foundry.hosted.planner: continue / replan within bounded round
+foundry.hosted.planner -> adjacent.approvals: approval / clarification
+adjacent.approvals -> foundry.endpoint: callback
+foundry.endpoint -> adjacent.telemetry: traces + cost
+foundry.endpoint -> associate: status / outcome

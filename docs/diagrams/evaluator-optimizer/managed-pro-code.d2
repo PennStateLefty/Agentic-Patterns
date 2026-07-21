@@ -1,0 +1,116 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    controller: Agent Framework Revision Graph {
+      class: native
+    }
+
+    generator: Drafting Optimizer {
+      class: native
+    }
+
+    evaluator: Policy Evaluator {
+      class: native
+    }
+  }
+
+  measurement: Foundry Evaluations (Measurement Only) {
+    class: native
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Quality Policy {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  rubric: Versioned Rubric and Thresholds {
+    class: custom
+  }
+
+  completion: Approval, Iteration, and Cost Limits {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  candidate: Dataverse / Cosmos Candidate and Feedback {
+    class: adjacent
+    shape: cylinder
+  }
+
+  checkpoint: Production Checkpoint Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  artifacts: Blob / SharePoint Versioned Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Approval and Callback Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: exception-request goal
+foundry.endpoint -> foundry.hosted.controller
+foundry.conversation -> foundry.hosted.controller: request context only
+foundry.hosted.controller -> foundry.hosted.generator: create / revise
+foundry.hosted.generator -> adjacent.candidate: candidate version
+adjacent.candidate -> foundry.hosted.evaluator: exact version
+custom.rubric -> foundry.hosted.evaluator: criteria + thresholds
+foundry.hosted.evaluator -> adjacent.candidate: score + feedback
+adjacent.candidate -> foundry.hosted.controller: evaluation result
+custom.completion -> foundry.hosted.controller: pass + hard limits
+foundry.hosted.controller -> foundry.hosted.generator: revision required
+foundry.hosted.controller -> adjacent.checkpoint: iteration boundary
+foundry.hosted.controller -> adjacent.artifacts: approved version
+foundry.hosted.controller -> adjacent.approval: high-risk / missing evidence
+adjacent.candidate -> foundry.measurement: offline / release evaluation
+foundry.endpoint -> adjacent.telemetry: iterations + scores + cost
+foundry.endpoint -> associate: approved result / escalation

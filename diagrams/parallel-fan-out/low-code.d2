@@ -1,0 +1,89 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  specialists: Domain Agents / Capabilities {
+    class: native
+  }
+
+  sequential: Generative Orchestration (Sequential Calls) {
+    class: native
+  }
+}
+
+custom: Application-Owned Policies {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  contracts: Branch Result Contracts {
+    class: custom
+  }
+
+  aggregation: Aggregation, Quorum, and Conflict Policy {
+    class: custom
+  }
+}
+
+adjacent: Flow-Composed Concurrency (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  scheduler: Power Automate / Logic Apps Parallel Branches {
+    class: adjacent
+  }
+
+  branch_state: Dataverse Branch State {
+    class: adjacent
+    shape: cylinder
+  }
+
+  aggregator: Flow Fan-In Aggregator {
+    class: adjacent
+  }
+
+  artifacts: SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: assignment request
+cps.front_door -> adjacent.scheduler: bounded fan-out request
+custom.contracts -> adjacent.scheduler: branch schemas
+adjacent.scheduler -> cps.specialists: concurrent Run an agent / API calls
+cps.specialists -> adjacent.branch_state: isolated typed results
+adjacent.branch_state -> adjacent.aggregator: all / quorum / timeout
+custom.aggregation -> adjacent.aggregator: merge + conflict rules
+adjacent.aggregator -> adjacent.artifacts: readiness checklist
+adjacent.aggregator -> cps.front_door: aggregated result
+cps.sequential -> cps.front_door: native alternative is sequential
+cps.front_door -> adjacent.telemetry: branch correlation
+cps.front_door -> associate: prioritized result

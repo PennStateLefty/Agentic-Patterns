@@ -1,0 +1,115 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Supervisor Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    supervisor: Agent Framework Supervisor Composition {
+      class: native
+    }
+
+    workers: Agents as Tools / Specialist Workers {
+      class: native
+    }
+
+    synthesis: Result Aggregator and Synthesizer {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Supervision Policy {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  registry: Worker Registry and Tenant Rules {
+    class: custom
+  }
+
+  contracts: Delegation, Conflict, and Stop Policy {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  ledger: Dataverse / Cosmos Delegation Ledger {
+    class: adjacent
+    shape: cylinder
+  }
+
+  checkpoint: Production Checkpoint Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Functions / Durable Task {
+    class: adjacent
+  }
+
+  artifacts: Blob / SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  approval: Approval and Callback Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: cross-domain goal
+foundry.endpoint -> foundry.hosted.supervisor
+foundry.conversation -> foundry.hosted.supervisor: retained session context
+custom.registry -> foundry.hosted.supervisor: worker capabilities
+custom.contracts -> foundry.hosted.supervisor: bounded delegation rules
+foundry.hosted.supervisor -> foundry.hosted.workers: invoke selected worker
+foundry.hosted.workers -> foundry.toolbox: tools
+foundry.hosted.workers -> foundry.hosted.synthesis: bounded result
+foundry.hosted.supervisor -> adjacent.ledger: assignment + outcome
+foundry.hosted.synthesis -> foundry.hosted.supervisor: reconciled evidence
+foundry.hosted.supervisor -> adjacent.checkpoint: standard checkpoint
+adjacent.durable -> foundry.endpoint: conditional durable round
+foundry.hosted.supervisor -> adjacent.artifacts: sequenced plan
+foundry.hosted.supervisor -> adjacent.approval: exception
+foundry.endpoint -> adjacent.telemetry: delegation traces + cost
+foundry.endpoint -> associate: unified response

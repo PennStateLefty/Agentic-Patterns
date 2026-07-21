@@ -1,0 +1,98 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio Participants (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  workers: HR / IT / Travel / Procurement Agents {
+    class: native
+  }
+
+  flows: Agent Flows {
+    class: native
+  }
+}
+
+custom: Application-Owned Workspace Policy {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  claims: Claim, Lease, and Optimistic-Concurrency Logic {
+    class: custom
+  }
+
+  completion: Conflict, Stale-Work, and Completion Policy {
+    class: custom
+  }
+}
+
+adjacent: Power Platform (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  blackboard: Dataverse Shared Working State {
+    class: adjacent
+    shape: cylinder
+  }
+
+  ledger: Dataverse Tasks, Claims, and Approvals {
+    class: adjacent
+    shape: cylinder
+  }
+
+  artifacts: SharePoint Versioned Workspace {
+    class: adjacent
+    shape: cylinder
+  }
+
+  events: Power Automate Row / File Triggers {
+    class: adjacent
+  }
+
+  approval: Power Automate Approvals {
+    class: adjacent
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: create workplace case
+cps.front_door -> adjacent.blackboard: structured request
+adjacent.blackboard -> adjacent.events: state change
+adjacent.events -> cps.flows: work available
+cps.flows -> custom.claims: claim request
+custom.claims -> adjacent.ledger: conditional claim / lease
+cps.flows -> cps.workers: invoke eligible specialist
+adjacent.blackboard -> cps.workers: current facts
+adjacent.artifacts -> cps.workers: pinned evidence
+cps.workers -> adjacent.blackboard: optimistic update
+cps.workers -> adjacent.artifacts: new artifact version
+cps.workers -> adjacent.ledger: result + release claim
+custom.completion -> adjacent.ledger: stale-work + terminal rules
+adjacent.approval -> adjacent.blackboard: human decision
+cps.front_door -> adjacent.telemetry: contribution correlation
+cps.front_door -> associate: status / outcome

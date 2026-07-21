@@ -1,0 +1,108 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    scheduler: Agent Framework Concurrent Scheduler {
+      class: native
+    }
+
+    workers: Isolated Specialist Workers {
+      class: native
+    }
+
+    aggregator: Fan-In Aggregator {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Policies {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  contracts: Branch Result Contracts {
+    class: custom
+  }
+
+  aggregation: Aggregation, Quorum, and Conflict Policy {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  checkpoint: Production Checkpoint / Branch Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Durable Functions / Durable Task {
+    class: adjacent
+  }
+
+  queue: Service Bus Work Queue {
+    class: adjacent
+  }
+
+  artifacts: Blob / SharePoint Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: assignment request
+foundry.endpoint -> foundry.hosted.scheduler
+foundry.conversation -> foundry.hosted.scheduler: request context only
+custom.contracts -> foundry.hosted.scheduler: branch schemas
+foundry.hosted.scheduler -> foundry.hosted.workers: start independent branches
+foundry.hosted.workers -> foundry.toolbox: tools
+foundry.hosted.workers -> foundry.hosted.aggregator: typed results
+custom.aggregation -> foundry.hosted.aggregator: quorum + merge rules
+foundry.hosted.scheduler -> adjacent.checkpoint: branch progress
+adjacent.durable -> foundry.endpoint: conditional durable round
+foundry.hosted.scheduler -> adjacent.queue: optional distributed commands
+foundry.hosted.aggregator -> adjacent.artifacts: readiness checklist
+foundry.endpoint -> adjacent.telemetry: branch traces + cost
+foundry.endpoint -> associate: prioritized result

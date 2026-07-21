@@ -1,0 +1,87 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+human: Human Specialist {
+  class: actor
+}
+
+boundary: Handoff / Decentralized Ownership {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  transfer: Ownership Transfer Protocol {
+    class: control
+  }
+
+  registry: Peer Capability Registry {
+    class: state
+  }
+
+  peers: Specialist Peer Mesh {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    it: IT Agent {
+      class: agent
+    }
+
+    security: Identity Security Agent {
+      class: agent
+    }
+  }
+
+  current_owner: Current Active Owner Record {
+    class: state
+  }
+
+  transfer_context: Minimized Transfer Context {
+    class: state
+  }
+
+  private_state: Agent-Private Working State {
+    class: state
+  }
+
+  shared_conversation: Transferable Conversation History {
+    class: state
+  }
+
+  workflow_state: Durable Transfer State {
+    class: state
+  }
+}
+
+telemetry: Transfer Audit and Trace Correlation {
+  class: operations
+}
+
+associate -> boundary.peers.it: report access issue
+boundary.peers.it -> boundary.transfer: request security takeover
+boundary.registry -> boundary.transfer: eligible peers
+boundary.transfer_context -> boundary.transfer: relevant context only
+boundary.shared_conversation -> boundary.transfer: conditional history
+boundary.transfer -> boundary.current_owner: IT to Security
+boundary.transfer -> boundary.peers.security: accept ownership + context
+boundary.peers.security -> associate: specialist-led dialogue
+boundary.peers.security -> boundary.transfer: return after remediation
+boundary.transfer -> boundary.current_owner: Security to IT
+boundary.transfer -> boundary.peers.it: accept ownership + result
+boundary.peers.it -> associate: complete resolution
+boundary.private_state -> boundary.peers: isolated local state
+boundary.workflow_state -> boundary.transfer: recover pending transfer
+boundary.transfer -> human: conditional human takeover
+boundary.transfer -> telemetry
+boundary.peers -> telemetry

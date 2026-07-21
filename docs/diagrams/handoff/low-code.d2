@@ -1,0 +1,97 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio Participants (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  it: Published IT Agent {
+    class: native
+  }
+
+  security: Published Security Agent {
+    class: native
+  }
+
+  connected: Connected-Agent Call (Bounded Return) {
+    class: native
+  }
+
+  human: Native Human Handoff {
+    class: native
+  }
+}
+
+custom: External Ownership Control {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  transfer: Peer Ownership Coordinator {
+    class: custom
+  }
+
+  adapters: Agent Endpoint / Channel Adapters {
+    class: custom
+  }
+
+  policy: Transfer, Loop, and Context Policy {
+    class: custom
+  }
+}
+
+adjacent: Power Platform (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  owner: Dataverse Current Owner and Transfer Audit {
+    class: adjacent
+    shape: cylinder
+  }
+
+  context: Dataverse Minimized Transfer Context {
+    class: adjacent
+    shape: cylinder
+  }
+
+  callbacks: Power Automate Callbacks {
+    class: adjacent
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.it: report access issue
+cps.it -> custom.adapters: request peer takeover
+custom.adapters -> custom.transfer
+custom.policy -> custom.transfer: allowed peers + hop limit
+adjacent.context -> custom.transfer: authorized context envelope
+custom.transfer -> adjacent.owner: compare-and-set active owner
+custom.transfer -> custom.adapters: activate Security
+custom.adapters -> cps.security: continue with context
+cps.security -> associate: specialist-led dialogue
+cps.security -> custom.transfer: return after remediation
+custom.transfer -> adjacent.owner: compare-and-set active owner
+custom.transfer -> cps.it: resume ownership + result
+cps.connected -> cps.it: bounded delegation is not transfer
+custom.transfer -> cps.human: conditional human takeover
+adjacent.callbacks -> custom.transfer: resume signal
+custom.transfer -> adjacent.telemetry: transfer trace

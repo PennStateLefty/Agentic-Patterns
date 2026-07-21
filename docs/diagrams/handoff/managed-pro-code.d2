@@ -1,0 +1,106 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+foundry: Microsoft Foundry Agent Service {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  endpoint: Managed Agent Endpoint {
+    class: native
+  }
+
+  conversation: Conversation State {
+    class: native
+    shape: cylinder
+  }
+
+  hosted: Hosted Agent (GA) {
+    class: native
+
+    transfer: Agent Framework Handoff Orchestration {
+      class: native
+    }
+
+    it: IT Peer Agent {
+      class: native
+    }
+
+    security: Identity Security Peer Agent {
+      class: native
+    }
+  }
+
+  toolbox: Toolbox / MCP {
+    class: native
+  }
+}
+
+custom: Application-Owned Transfer Policy {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  registry: Peer Registry and Authorization Rules {
+    class: custom
+  }
+
+  limits: Context Minimization, Hop, and Loop Policy {
+    class: custom
+  }
+}
+
+adjacent: Operational Services (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  owner: Dataverse / Cosmos Current Owner and Audit {
+    class: adjacent
+    shape: cylinder
+  }
+
+  checkpoint: Production Checkpoint Store {
+    class: adjacent
+    shape: cylinder
+  }
+
+  callbacks: Approval / Human Takeover Service {
+    class: adjacent
+  }
+
+  telemetry: Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> foundry.endpoint: report access issue
+foundry.endpoint -> foundry.hosted.it
+foundry.conversation -> foundry.hosted.transfer: session context
+foundry.hosted.it -> foundry.hosted.transfer: request security takeover
+custom.registry -> foundry.hosted.transfer: eligible peer
+custom.limits -> foundry.hosted.transfer: context + hop rules
+foundry.hosted.transfer -> adjacent.owner: compare-and-set active owner
+foundry.hosted.transfer -> foundry.hosted.security: transfer context + control
+foundry.hosted.security -> foundry.toolbox: remediation tools
+foundry.hosted.security -> foundry.hosted.transfer: return after remediation
+foundry.hosted.transfer -> adjacent.owner: compare-and-set active owner
+foundry.hosted.transfer -> foundry.hosted.it: resume ownership
+foundry.hosted.transfer -> adjacent.checkpoint: transfer boundary
+foundry.hosted.transfer -> adjacent.callbacks: conditional human takeover
+foundry.endpoint -> adjacent.telemetry: transfer traces
+foundry.endpoint -> associate: active-owner response

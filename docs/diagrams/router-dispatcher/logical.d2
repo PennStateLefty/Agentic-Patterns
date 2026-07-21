@@ -1,0 +1,69 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+boundary: Router Pattern {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Front-Door Agent {
+    class: agent
+  }
+
+  router: Router / Classifier {
+    class: control
+  }
+
+  registry: Capability Registry {
+    class: state
+  }
+
+  policy: Routing Policy {
+    class: state
+  }
+
+  specialists: Domain Specialists {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    it: IT Agent {
+      class: agent
+    }
+    hr: HR Agent {
+      class: agent
+    }
+    travel: Travel Agent {
+      class: agent
+    }
+  }
+}
+
+telemetry: Trace and Decision Log {
+  class: operations
+}
+
+associate -> boundary.front_door: request
+boundary.front_door -> boundary.router: intent + context
+boundary.registry -> boundary.router: capability metadata
+boundary.policy -> boundary.router: confidence + fallback rules
+boundary.router -> boundary.specialists.it: selected request
+boundary.router -> boundary.specialists.hr: selected request
+boundary.router -> boundary.specialists.travel: selected request
+boundary.specialists.it -> boundary.front_door: bounded result
+boundary.specialists.hr -> boundary.front_door: bounded result
+boundary.specialists.travel -> boundary.front_door: bounded result
+boundary.front_door -> associate: response
+boundary.router -> telemetry: route decision
+boundary.specialists -> telemetry: execution outcome

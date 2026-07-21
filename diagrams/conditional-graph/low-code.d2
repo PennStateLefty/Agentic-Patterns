@@ -1,0 +1,95 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+cps: Copilot Studio (Native) {
+  style: {
+    fill: "#F7FBFF"
+    stroke: "#0078D4"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  front_door: Associate Assistance Agent {
+    class: native
+  }
+
+  controller: Classic Topic / Agent Flow Graph {
+    class: native
+  }
+
+  agents: Review Agents and Tools {
+    class: native
+  }
+
+  new_workflows: New Workflows (Preview) {
+    class: preview
+  }
+}
+
+custom: Application-Owned Process Model {
+  style: {
+    fill: "#FFFBEB"
+    stroke: "#C19C00"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  transitions: Versioned States, Guards, and Invalid-Transition Policy {
+    class: custom
+  }
+
+  reliability: Idempotency and Compensation Policy {
+    class: custom
+  }
+}
+
+adjacent: Power Platform (Platform-adjacent) {
+  style: {
+    fill: "#F5FFF7"
+    stroke: "#107C10"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  case_state: Dataverse Business Case and Current State {
+    class: adjacent
+    shape: cylinder
+  }
+
+  durable: Power Automate / Logic Apps Stateful Process {
+    class: adjacent
+  }
+
+  approvals: Power Automate Approvals {
+    class: adjacent
+  }
+
+  artifacts: SharePoint Evidence and Artifacts {
+    class: adjacent
+    shape: cylinder
+  }
+
+  telemetry: Analytics / Application Insights {
+    class: adjacent
+  }
+}
+
+associate -> cps.front_door: equipment request
+cps.front_door -> cps.controller: start / resume
+custom.transitions -> cps.controller: states + guarded transitions
+cps.controller -> cps.agents: bounded state action
+cps.agents -> adjacent.artifacts: evidence + output
+cps.controller -> adjacent.case_state: compare-and-set business state
+adjacent.case_state -> adjacent.durable: trigger next idempotent step
+adjacent.durable -> cps.controller: bounded callback / resume
+cps.controller -> adjacent.approvals: suspend for decision
+adjacent.approvals -> adjacent.case_state: authenticated decision
+custom.reliability -> adjacent.durable: retry + compensation
+cps.new_workflows -> adjacent.case_state: optional preview path
+cps.controller -> adjacent.telemetry: transitions + correlation
+cps.front_door -> associate: status / outcome

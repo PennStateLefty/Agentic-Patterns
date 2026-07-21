@@ -1,0 +1,86 @@
+...@../shared/theme.d2
+
+direction: right
+
+associate: Associate {
+  class: actor
+}
+
+boundary: Parallel Fan-Out / Fan-In {
+  style: {
+    fill: "#FAFAFA"
+    stroke: "#8A8886"
+    stroke-width: 2
+    border-radius: 10
+  }
+
+  coordinator: Concurrent Scheduler {
+    class: control
+  }
+
+  branches: Isolated Branches {
+    style: {
+      fill: "#FFFFFF"
+      stroke: "#0078D4"
+      stroke-width: 1
+      border-radius: 8
+    }
+
+    travel: Travel Worker {
+      class: agent
+    }
+
+    immigration: Immigration Worker {
+      class: agent
+    }
+
+    tax: Tax and Expense Worker {
+      class: agent
+    }
+  }
+
+  branch_state: Private Branch State {
+    class: state
+  }
+
+  aggregator: Fan-In Aggregator {
+    class: control
+  }
+
+  policy: Aggregation and Quorum Policy {
+    class: state
+  }
+
+  result_state: Structured Branch Results {
+    class: state
+  }
+
+  workflow_state: Durable Execution State {
+    class: state
+  }
+
+  artifacts: Artifact Workspace {
+    class: state
+  }
+}
+
+telemetry: Branch Trace and Cost Correlation {
+  class: operations
+}
+
+associate -> boundary.coordinator: assignment request
+boundary.coordinator -> boundary.branches.travel: start concurrently
+boundary.coordinator -> boundary.branches.immigration: start concurrently
+boundary.coordinator -> boundary.branches.tax: start concurrently
+boundary.branch_state -> boundary.branches: isolated context
+boundary.branches.travel -> boundary.result_state: typed result
+boundary.branches.immigration -> boundary.result_state: typed result
+boundary.branches.tax -> boundary.result_state: typed result
+boundary.result_state -> boundary.aggregator: all / quorum / timeout
+boundary.policy -> boundary.aggregator: merge + conflict rules
+boundary.aggregator -> boundary.artifacts: readiness checklist
+boundary.aggregator -> associate: prioritized result
+boundary.workflow_state -> boundary.coordinator: resume pending branches
+boundary.coordinator -> telemetry
+boundary.branches -> telemetry
+boundary.aggregator -> telemetry
