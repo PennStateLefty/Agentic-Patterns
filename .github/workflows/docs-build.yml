@@ -29,7 +29,7 @@ jobs:
           python-version: "3.12"
 
       - name: Install docs dependencies
-        run: pip install --upgrade pip && pip install mkdocs mkdocs-material
+        run: pip install --upgrade pip && pip install mkdocs mkdocs-material mkdocs-mermaid2-plugin
 
       - name: Build docs
         run: mkdocs build --strict
@@ -51,4 +51,3 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
-

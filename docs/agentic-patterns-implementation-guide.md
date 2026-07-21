@@ -163,7 +163,7 @@ Durable runtimes preserve execution; they do not supply agent planning or the bu
 
 ---
 
-# Blueprint 1: Router / Dispatcher
+## Blueprint 1: Router / Dispatcher
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -342,7 +342,7 @@ Agent Framework implements the Router. Foundry operates the endpoint and Hosted 
 
 ---
 
-# Blueprint 2: Plan-and-Execute / Adaptive Replanning
+## Blueprint 2: Plan-and-Execute / Adaptive Replanning
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -570,7 +570,7 @@ Agent Framework supplies planning behavior; Foundry supplies managed hosting. Ne
 
 ---
 
-# Blueprint 3: Sequential Pipeline
+## Blueprint 3: Sequential Pipeline
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -770,7 +770,7 @@ Agent Framework implements the ordered pipeline; GA Foundry Hosted agents provid
 
 ---
 
-# Blueprint 4: Parallel Fan-Out/Fan-In
+## Blueprint 4: Parallel Fan-Out/Fan-In
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -976,7 +976,7 @@ Agent Framework implements concurrent scheduling and aggregation; GA Foundry Hos
 
 ---
 
-# Blueprint 5: Supervisor / Manager-Worker
+## Blueprint 5: Supervisor / Manager-Worker
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -1178,7 +1178,7 @@ Agent Framework implements supervision and bounded delegation; GA Foundry Hosted
 
 ---
 
-# Blueprint 6: Handoff / Decentralized
+## Blueprint 6: Handoff / Decentralized
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -1380,7 +1380,7 @@ Agent Framework supplies contextual peer handoff; GA Foundry Hosted agents suppl
 
 ---
 
-# Blueprint 7: Group Chat / Shared Conversation
+## Blueprint 7: Group Chat / Shared Conversation
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -1587,7 +1587,7 @@ Agent Framework implements Group Chat and GA Foundry Hosted agents supply manage
 
 ---
 
-# Blueprint 8: Evaluator-Optimizer
+## Blueprint 8: Evaluator-Optimizer
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -1796,7 +1796,7 @@ Agent Framework implements the generate/evaluate/revise graph; GA Foundry Hosted
 
 ---
 
-# Blueprint 9: Conditional Graph / State Machine
+## Blueprint 9: Conditional Graph / State Machine
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 
@@ -2032,7 +2032,7 @@ Agent Framework implements the graph and standard checkpoints; GA Foundry Hosted
 
 ---
 
-# Blueprint 10: Blackboard / Shared Workspace
+## Blueprint 10: Blackboard / Shared Workspace
 
 > [Return to pattern selection guidance](agentic-patterns-architecture-position.md#6-pattern-cards)
 

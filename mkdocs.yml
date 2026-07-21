@@ -5,11 +5,15 @@ theme:
   name: material
 docs_dir: docs
 site_dir: site
+plugins:
+  - search
+  - mermaid2
 markdown_extensions:
-  - pymdownx.superfences
-extra_javascript:
-  - https://unpkg.com/mermaid@10/dist/mermaid.min.js
-  - javascripts/mermaid-init.js
+  - pymdownx.superfences:
+      custom_fences:
+        - name: mermaid
+          class: mermaid
+          format: !!python/name:pymdownx.superfences.fence_code_format
 nav:
   - Home: index.md
   - Architecture Position: agentic-patterns-architecture-position.md
