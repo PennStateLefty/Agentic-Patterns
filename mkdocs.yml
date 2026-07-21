@@ -6,5 +6,6 @@ theme:
 docs_dir: docs
 site_dir: site
 nav:
+  - Home: index.md
   - Architecture Position: agentic-patterns-architecture-position.md
   - Implementation Guide: agentic-patterns-implementation-guide.md
