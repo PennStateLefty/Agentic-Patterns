@@ -1,5 +1,6 @@
 site_name: Agentic Patterns
 site_description: Industry-recognized AI agent orchestration patterns and implementation guidance
+site_url: https://pennstatelefty.github.io/Agentic-Patterns/
 theme:
   name: material
 docs_dir: docs
